@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Passkeeper.Features.Settings.Pages.SecuritySettingsPage"
+             Title="Security Settings"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="🔐 Security" 
+                       FontSize="28" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                <Label Text="Manage your app security settings" 
+                       FontSize="16"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+            </VerticalStackLayout>
+
+            <!-- PIN Management -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="PIN Lock" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Set a 4-digit PIN to secure your passwords" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <HorizontalStackLayout Spacing="12">
+                        <Button Text="Set PIN" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                TextColor="White"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Clicked="OnSetOrChangePinClicked" />
+                        <Button Text="Remove PIN" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Clicked="OnRemovePinClicked" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Biometric Authentication -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Biometric Authentication" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Use fingerprint or face recognition for quick access" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="Enable Biometric Unlock" 
+                               VerticalOptions="Center"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                        <Switch x:Name="BiometricSwitch" 
+                                Toggled="OnBiometricToggled"
+                                HorizontalOptions="EndAndExpand" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Auto-Lock Settings -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Auto-Lock" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Automatically lock the app after inactivity" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <Picker x:Name="AutoLockPicker" 
+                            Title="Select auto-lock time"
+                            SelectedIndexChanged="OnAutoLockChanged">
+                        <Picker.Items>
+                            <x:String>Immediately</x:String>
+                            <x:String>1 minute</x:String>
+                            <x:String>5 minutes</x:String>
+                            <x:String>15 minutes</x:String>
+                            <x:String>30 minutes</x:String>
+                            <x:String>1 hour</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage> 

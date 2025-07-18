@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Passkeeper.Features.Settings.Pages.SettingsPage"
+             Title="Settings"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="⚙️ Settings" 
+                       FontSize="28" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                <Label Text="Customize your Passkeeper experience" 
+                       FontSize="16"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+            </VerticalStackLayout>
+
+            <!-- Settings Categories -->
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Security Settings -->
+                <Frame CornerRadius="16" 
+                       Padding="20" 
+                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" 
+                               Text="🔐" 
+                               FontSize="24" 
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" Margin="16,0">
+                            <Label Text="Security" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                            <Label Text="PIN lock, biometrics, and auto-lock" 
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="›" 
+                               FontSize="20"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="2" 
+                                BackgroundColor="Transparent"
+                                Clicked="OnSecuritySettingsClicked" />
+                    </Grid>
+                </Frame>
+
+                <!-- Notification Settings -->
+                <Frame CornerRadius="16" 
+                       Padding="20" 
+                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" 
+                               Text="🔔" 
+                               FontSize="24" 
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" Margin="16,0">
+                            <Label Text="Notifications" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                            <Label Text="Reminders and security alerts" 
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="›" 
+                               FontSize="20"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="2" 
+                                BackgroundColor="Transparent"
+                                Clicked="OnNotificationSettingsClicked" />
+                    </Grid>
+                </Frame>
+
+                <!-- App Settings -->
+                <Frame CornerRadius="16" 
+                       Padding="20" 
+                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" 
+                               Text="⚙️" 
+                               FontSize="24" 
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" Margin="16,0">
+                            <Label Text="App Settings" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                            <Label Text="Theme, updates, and data management" 
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="›" 
+                               FontSize="20"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="2" 
+                                BackgroundColor="Transparent"
+                                Clicked="OnAppSettingsClicked" />
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+
+            <!-- Quick Actions -->
+            <VerticalStackLayout Spacing="16">
+                <Label Text="Quick Actions" 
+                       FontSize="20" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                
+                <Frame CornerRadius="16" 
+                       Padding="20" 
+                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                    <VerticalStackLayout Spacing="12">
+                        <Button Text="About Passkeeper" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Clicked="OnAboutClicked" />
+                        
+                        <Button Text="Help &amp; Support" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Clicked="OnHelpClicked" />
+                        
+                        <Button Text="Send Feedback" 
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Clicked="OnFeedbackClicked" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Passkeeper.Features.Settings.Pages.NotificationSettingsPage"
+             Title="Notification Settings"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="🔔 Notifications" 
+                       FontSize="28" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                <Label Text="Configure your notification preferences" 
+                       FontSize="16"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+            </VerticalStackLayout>
+
+            <!-- General Notifications -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="General Notifications" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Receive notifications for important events" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="Enable Notifications" 
+                               VerticalOptions="Center"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                        <Switch x:Name="NotificationSwitch" 
+                                Toggled="OnNotificationToggled"
+                                HorizontalOptions="EndAndExpand" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Reminder Settings -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Daily Reminders" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Get reminded to review your passwords regularly" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="Daily Password Review" 
+                               VerticalOptions="Center"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                        <Switch x:Name="DailyReminderSwitch" 
+                                Toggled="OnDailyReminderToggled"
+                                HorizontalOptions="EndAndExpand" />
+                    </HorizontalStackLayout>
+                    
+                    <Label Text="Reminder Time" 
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    <TimePicker x:Name="NotificationTimePicker" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Security Alerts -->
+            <Frame CornerRadius="16" 
+                   Padding="20" 
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Security Alerts" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Label Text="Get notified about security-related events" 
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                            <Label Text="Failed Login Attempts" 
+                                   VerticalOptions="Center"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                            <Switch x:Name="FailedLoginSwitch" 
+                                    Toggled="OnFailedLoginToggled"
+                                    HorizontalOptions="EndAndExpand" />
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                            <Label Text="Password Expiry Warnings" 
+                                   VerticalOptions="Center"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                            <Switch x:Name="PasswordExpirySwitch" 
+                                    Toggled="OnPasswordExpiryToggled"
+                                    HorizontalOptions="EndAndExpand" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage> 
