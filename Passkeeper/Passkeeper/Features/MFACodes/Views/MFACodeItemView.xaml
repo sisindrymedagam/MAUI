@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:helpers="clr-namespace:Passkeeper.Helpers"
+             x:Class="Passkeeper.Features.MFACodes.Views.MFACodeItemView">
+    
+    <Frame CornerRadius="16" 
+           Padding="20" 
+           Margin="0,8"
+           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+           BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+        
+        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+            
+            <!-- Account Info -->
+            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="4">
+                <Label Text="{Binding DisplayName}" 
+                       FontSize="18" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                <Label Text="{Binding Issuer}" 
+                       FontSize="14"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                       IsVisible="{Binding Issuer, Converter={x:Static helpers:StringToBoolConverter.Instance}}" />
+            </VerticalStackLayout>
+            
+            <!-- Timer -->
+            <Frame Grid.Row="0" Grid.Column="1" 
+                   CornerRadius="8" 
+                   Padding="8,4"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   BorderColor="Transparent">
+                <Label Text="{Binding TimeRemaining, StringFormat='{0}s'}" 
+                       FontSize="12" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+            </Frame>
+            
+            <!-- Code Display -->
+            <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   CornerRadius="12" 
+                   Padding="16,12"
+                   Margin="0,12,0,0"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray800}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}">
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="{Binding Code}" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           FontFamily="Monospace"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                    
+                    <Button Grid.Column="1"
+                            icon:MauiIcon.Value="{icon:Fluent Icon=Copy24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}"
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            Padding="8"
+                            Clicked="OnCopyClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Transparent" />
+                        </Button.Shadow>
+                    </Button>
+                </Grid>
+                
+            </Frame>
+            
+        </Grid>
+        
+    </Frame>
+    
+</ContentView> 

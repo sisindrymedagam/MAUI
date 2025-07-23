@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios;net9.0-maccatalyst;net9.0-android</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
@@ -42,6 +41,22 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
+    <MtouchDebug>True</MtouchDebug>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
+    <MtouchDebug>True</MtouchDebug>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- App Icon -->
     <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -66,6 +81,7 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.81" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
     <PackageReference Include="Oscore.Maui.Biometric" Version="2.4.0" />
+    <PackageReference Include="Otp.NET" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,6 +116,12 @@
     <Compile Update="Features\Settings\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Features\MFACodes\Pages\MFACodesList.xaml.cs">
+      <DependentUpon>MFACodesList.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Features\MFACodes\Views\MFACodeItemView.xaml.cs">
+      <DependentUpon>MFACodeItemView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -113,6 +135,12 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Components\OptionTileComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Features\MFACodes\Pages\MFACodesList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Features\MFACodes\Views\MFACodeItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Features\Onboarding\Pages\PinLockPage.xaml">
@@ -162,8 +190,7 @@
   <ItemGroup>
     <Folder Include="Features\Address\Pages\" />
     <Folder Include="Features\Address\Views\" />
-    <Folder Include="Features\Authenticator\Pages\" />
-    <Folder Include="Features\Authenticator\Views\" />
+    <Folder Include="Features\MFACodes\Views\" />
     <Folder Include="Features\Auth\Pages\" />
     <Folder Include="Features\Auth\Views\" />
     <Folder Include="Features\Onboarding\Views\" />
