@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passkeeper", "Passkeeper\Passkeeper.csproj", "{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3BEC208-922E-4AEB-B49E-5C7F41F8F7A7}
+	EndGlobalSection
+EndGlobal
