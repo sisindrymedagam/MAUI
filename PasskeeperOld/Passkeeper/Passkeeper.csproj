@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0-ios;net9.0-maccatalyst;net9.0-android</TargetFrameworks>
+    <TargetFrameworks>net9.0-android</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
@@ -78,9 +78,10 @@
   <ItemGroup>
     <PackageReference Include="AathifMahir.Maui.MauiIcons.Fluent" Version="4.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.81" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
-    <PackageReference Include="Oscore.Maui.Biometric" Version="2.4.0" />
+    <PackageReference Include="NewRelic.MAUI.Plugin" Version="1.1.10" />
+    <PackageReference Include="Oscore.Maui.Biometric" Version="2.4.1" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
   </ItemGroup>
 

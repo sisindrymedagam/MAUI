@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passkeeper", "Passkeeper\Passkeeper.csproj", "{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passkeeper.Models", "Passkeeper.Models\Passkeeper.Models.csproj", "{AD38973C-F62F-4DFA-B6D8-CB9DACC98084}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,8 +15,13 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAA9141E-9277-444E-A4F2-80B1CCE8DFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD38973C-F62F-4DFA-B6D8-CB9DACC98084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD38973C-F62F-4DFA-B6D8-CB9DACC98084}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD38973C-F62F-4DFA-B6D8-CB9DACC98084}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD38973C-F62F-4DFA-B6D8-CB9DACC98084}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

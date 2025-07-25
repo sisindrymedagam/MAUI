@@ -66,14 +66,33 @@
   <ItemGroup>
     <PackageReference Include="AathifMahir.Maui.MauiIcons.Fluent" Version="4.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Components\" />
-    <Folder Include="Features\" />
+    <Folder Include="Features\MFACodes\Pages\" />
     <Folder Include="Helpers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Passkeeper.Models\Passkeeper.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Features\Password\Pages\GeneratePasswordPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Features\Password\Pages\PasswordsListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Features\Password\Pages\SavePasswordPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Features\Password\Views\GeneratePasswordView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

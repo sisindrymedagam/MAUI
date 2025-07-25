@@ -1,4 +1,4 @@
-﻿using Passkeeper.Features.Onboarding.Pages;
+﻿using NewRelic.MAUI.Plugin;
 
 namespace Passkeeper
 {
@@ -6,19 +6,22 @@ namespace Passkeeper
     {
         public App()
         {
-            //var themeIndex = Preferences.Get("theme_index", 0);
-            //var theme = themeIndex switch
-            //{
-            //    1 => AppTheme.Light,
-            //    2 => AppTheme.Dark,
-            //    _ => AppTheme.Unspecified
-            //};
+            var themeIndex = Preferences.Get("theme_index", 0);
+            var theme = themeIndex switch
+            {
+                1 => AppTheme.Light,
+                2 => AppTheme.Dark,
+                _ => AppTheme.Unspecified
+            };
 
-            //if (Application.Current != null)
-            //{
-            //    Application.Current.UserAppTheme = theme;
-            //}
+            if (Application.Current != null)
+            {
+                Application.Current.UserAppTheme = theme;
+            }
             InitializeComponent();
+
+            CrossNewRelic.Current.HandleUncaughtException();
+            CrossNewRelic.Current.TrackShellNavigatedEvents();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
