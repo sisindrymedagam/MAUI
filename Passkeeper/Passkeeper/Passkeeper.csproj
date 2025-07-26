@@ -24,7 +24,7 @@
 		<ApplicationTitle>Passkeeper</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.passkeeper</ApplicationId>
+		<ApplicationId>com.passkeeper</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -60,8 +60,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Data\" />
+	  <Folder Include="Models\" />
+	  <Folder Include="PageModels\" />
+	  <Folder Include="Pages\" />
 	</ItemGroup>
 
 </Project>
