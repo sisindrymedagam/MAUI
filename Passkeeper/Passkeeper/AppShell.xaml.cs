@@ -1,10 +1,10 @@
-﻿namespace Passkeeper;
-
-public partial class AppShell : Shell
+﻿namespace Passkeeper
 {
-    public AppShell()
+    public partial class AppShell : Shell
     {
-        InitializeComponent();
-        _ = new MauiIcon();
+        public AppShell()
+        {
+            InitializeComponent();
+        }
     }
 }

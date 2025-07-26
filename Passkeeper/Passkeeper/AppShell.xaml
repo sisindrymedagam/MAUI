@@ -3,22 +3,12 @@
     x:Class="Passkeeper.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:pw="clr-namespace:Passkeeper.Features.Password.Pages"
-    xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+    xmlns:local="clr-namespace:Passkeeper"
     Title="Passkeeper">
 
-    <TabBar>
-        <Tab Title="Passwords" icon:MauiIcon.Value="{icon:Fluent Icon=Key24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
-            <ShellContent ContentTemplate="{DataTemplate pw:PasswordsListPage}" />
-        </Tab>
-        <!--<Tab Title="Codes" icon:MauiIcon.Value="{icon:Fluent Icon=Password24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
-            <ShellContent ContentTemplate="{DataTemplate mfa:MFACodesList}" />
-        </Tab>
-        <Tab Title="Payments" Icon="payments.svg">
-            <ShellContent ContentTemplate="{DataTemplate local:PaymentsPage}" Route="PaymentsPage" />
-        </Tab>
-        <Tab Title="Addresses" Icon="addresses.svg">
-            <ShellContent ContentTemplate="{DataTemplate local:AddressesPage}" Route="AddressesPage" />
-        </Tab>-->
-    </TabBar>
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
+
 </Shell>
