@@ -1,6 +1,4 @@
-﻿using MauiIcons.Core;
-
-namespace Passkeeper
+﻿namespace Passkeeper
 {
     public partial class AppShell : Shell
     {

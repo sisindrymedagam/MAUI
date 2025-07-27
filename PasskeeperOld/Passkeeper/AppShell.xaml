@@ -6,17 +6,16 @@
     xmlns:pw="clr-namespace:Passkeeper.Features.Password.Pages"
     xmlns:mfa="clr-namespace:Passkeeper.Features.MFACodes.Pages"
     xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
-    Title="Passkeeper"
-    Shell.FlyoutBehavior="Disabled">
+    Title="Passkeeper">
 
     <TabBar>
         <Tab Title="Passwords" icon:MauiIcon.Value="{icon:Fluent Icon=Key24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
             <ShellContent ContentTemplate="{DataTemplate pw:PasswordsListPage}" />
         </Tab>
-        <!--<Tab Title="Codes" icon:MauiIcon.Value="{icon:Fluent Icon=Password24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
+        <Tab Title="Codes" icon:MauiIcon.Value="{icon:Fluent Icon=Password24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
             <ShellContent ContentTemplate="{DataTemplate mfa:MFACodesList}" />
         </Tab>
-        <Tab Title="Payments" Icon="payments.svg">
+        <!--<Tab Title="Payments" Icon="payments.svg">
             <ShellContent ContentTemplate="{DataTemplate local:PaymentsPage}" Route="PaymentsPage" />
         </Tab>
         <Tab Title="Addresses" Icon="addresses.svg">

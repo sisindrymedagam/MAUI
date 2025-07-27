@@ -1,7 +1,5 @@
-﻿using MauiIcons.Core;
+﻿using Microsoft.Extensions.Logging;
 using Passkeeper.Features.Settings.Pages;
-using Passkeeper.Helpers;
-using Passkeeper.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -9,6 +7,8 @@ namespace Passkeeper.Features.Password.Pages;
 
 public partial class PasswordsListPage : ContentPage
 {
+    private readonly ILogger<PasswordsListPage> _logger;
+
     public ObservableCollection<PasswordListView> PasswordItems { get; set; }
     //public ObservableCollection<CompanyListView> CompanyItems { get; set; }
 
@@ -26,7 +26,7 @@ public partial class PasswordsListPage : ContentPage
         }
     }
 
-    public PasswordsListPage()
+    public PasswordsListPage(ILogger<PasswordsListPage> logger)
     {
         InitializeComponent();
         PasswordItems = PasswordsList.GetPasswordListView();
@@ -34,6 +34,7 @@ public partial class PasswordsListPage : ContentPage
         _ = new MauiIcon();
         RefreshCommand = new Command(async () => await RefreshAsync());
         BindingContext = this;
+        _logger = logger;
     }
 
     //Overrides the back button/gesture

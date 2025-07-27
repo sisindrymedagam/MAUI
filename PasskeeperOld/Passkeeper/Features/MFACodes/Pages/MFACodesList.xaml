@@ -9,17 +9,6 @@
     
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         
-        <!-- Header -->
-        <VerticalStackLayout Grid.Row="0" Padding="20,16" Spacing="8">
-            <Label Text="Authenticator Codes" 
-                   FontSize="28" 
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-            <Label Text="Your 2FA codes are automatically generated and updated every 30 seconds" 
-                   FontSize="14"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
-        </VerticalStackLayout>
-        
         <!-- Debug Info -->
         <Label Grid.Row="1" 
                Text="{Binding MFACodes.Count, StringFormat='Debug: {0} codes loaded'}"
