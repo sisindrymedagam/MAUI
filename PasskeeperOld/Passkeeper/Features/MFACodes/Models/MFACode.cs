@@ -12,7 +12,7 @@ public class MFACode : INotifyPropertyChanged
     private bool _isExpiringSoon = false;
 
     public int Id { get; set; }
-    
+
     public string Name
     {
         get => _name;
@@ -23,7 +23,7 @@ public class MFACode : INotifyPropertyChanged
             OnPropertyChanged(nameof(DisplayName));
         }
     }
-    
+
     public string Secret
     {
         get => _secret;
@@ -33,7 +33,7 @@ public class MFACode : INotifyPropertyChanged
             OnPropertyChanged(nameof(Secret));
         }
     }
-    
+
     public string Issuer
     {
         get => _issuer;
@@ -44,7 +44,7 @@ public class MFACode : INotifyPropertyChanged
             OnPropertyChanged(nameof(DisplayName));
         }
     }
-    
+
     public string Code
     {
         get => _code;
@@ -54,7 +54,7 @@ public class MFACode : INotifyPropertyChanged
             OnPropertyChanged(nameof(Code));
         }
     }
-    
+
     public int TimeRemaining
     {
         get => _timeRemaining;
@@ -65,7 +65,7 @@ public class MFACode : INotifyPropertyChanged
             IsExpiringSoon = value <= 5;
         }
     }
-    
+
     public bool IsExpiringSoon
     {
         get => _isExpiringSoon;
@@ -75,13 +75,13 @@ public class MFACode : INotifyPropertyChanged
             OnPropertyChanged(nameof(IsExpiringSoon));
         }
     }
-    
+
     public string DisplayName => string.IsNullOrEmpty(Issuer) ? Name : $"{Issuer} ({Name})";
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
-    
+
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-} 
+}

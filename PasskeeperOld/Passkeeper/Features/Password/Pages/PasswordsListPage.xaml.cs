@@ -14,11 +14,11 @@ public partial class PasswordsListPage : ContentPage
 
     public ICommand? RefreshCommand { get; }
 
-    bool isRefreshing;
+    private bool isRefreshing;
 
     public bool IsRefreshing
     {
-        get { return isRefreshing; }
+        get => isRefreshing;
         set
         {
             isRefreshing = value;

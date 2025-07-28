@@ -9,11 +9,15 @@ public static class LabelForBehavior
             default(string),
             propertyChanged: OnTargetIdChanged);
 
-    public static string GetTargetId(BindableObject view) =>
-        (string)view.GetValue(TargetIdProperty);
+    public static string GetTargetId(BindableObject view)
+    {
+        return (string)view.GetValue(TargetIdProperty);
+    }
 
-    public static void SetTargetId(BindableObject view, string value) =>
+    public static void SetTargetId(BindableObject view, string value)
+    {
         view.SetValue(TargetIdProperty, value);
+    }
 
     private static void OnTargetIdChanged(BindableObject bindable, object oldValue, object newValue)
     {

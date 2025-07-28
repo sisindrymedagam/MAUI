@@ -18,7 +18,7 @@ public partial class SetupPinPage : ContentPage
             // First time entering PIN
             _firstPin = pin;
             _isConfirming = true;
-            
+
             // Update UI for confirmation
             SetupTitle.Text = "Confirm Your PIN";
             SetupSubtitle.Text = "Enter the same PIN again to confirm";
@@ -32,7 +32,7 @@ public partial class SetupPinPage : ContentPage
                 // PINs match, save and proceed
                 await SecureStorage.SetAsync("app_pin", pin);
                 await DisplayAlert("Success", "PIN created successfully!", "OK");
-                
+
                 // Navigate to main app
                 if (Application.Current?.Windows.Count > 0)
                 {
@@ -48,7 +48,7 @@ public partial class SetupPinPage : ContentPage
                 SetupTitle.Text = "Create Your PIN";
                 SetupSubtitle.Text = "Enter a 4-digit PIN to secure your passwords";
                 PinKeyboard.ClearPin();
-                
+
                 // Add haptic feedback for wrong PIN
                 try
                 {
@@ -64,10 +64,10 @@ public partial class SetupPinPage : ContentPage
 
     private async void OnSkipClicked(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Skip PIN Setup", 
-            "You can set up a PIN later in Settings. Are you sure you want to continue without a PIN?", 
+        bool confirm = await DisplayAlert("Skip PIN Setup",
+            "You can set up a PIN later in Settings. Are you sure you want to continue without a PIN?",
             "Continue", "Cancel");
-        
+
         if (confirm)
         {
             // Navigate to main app without PIN
@@ -77,4 +77,4 @@ public partial class SetupPinPage : ContentPage
             }
         }
     }
-} 
+}

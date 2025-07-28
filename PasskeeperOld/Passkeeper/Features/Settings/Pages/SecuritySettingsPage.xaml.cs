@@ -1,4 +1,4 @@
-using Maui.Biometric;
+using Plugin.Maui.Biometric;
 
 namespace Passkeeper.Features.Settings.Pages;
 
@@ -13,14 +13,14 @@ public partial class SecuritySettingsPage : ContentPage
     private void LoadSettings()
     {
         BiometricSwitch.IsToggled = Preferences.Get("use_biometrics", false);
-        
-        var autoLockIndex = Preferences.Get("auto_lock_index", 0);
+
+        int autoLockIndex = Preferences.Get("auto_lock_index", 0);
         AutoLockPicker.SelectedIndex = autoLockIndex;
     }
 
     private async void OnSetOrChangePinClicked(object sender, EventArgs e)
     {
-        var pin = await DisplayPromptAsync("Set PIN", "Enter a new 4-digit PIN:", keyboard: Keyboard.Numeric, maxLength: 4);
+        string pin = await DisplayPromptAsync("Set PIN", "Enter a new 4-digit PIN:", keyboard: Keyboard.Numeric, maxLength: 4);
         if (!string.IsNullOrWhiteSpace(pin) && pin.Length == 4)
         {
             await SecureStorage.SetAsync("app_pin", pin);
@@ -48,18 +48,29 @@ public partial class SecuritySettingsPage : ContentPage
     {
         if (e.Value)
         {
-            var available = await BiometricAuthentication.Current.IsAvailableAsync();
-            if (available)
+            var enrolledBioMetrics = await BiometricAuthenticationService.Default.GetEnrolledBiometricTypesAsync();
+            if (enrolledBioMetrics.Length > 0)
             {
-                var request = new AuthenticationRequest(title: "Authenticate", reason: "Please authenticate to enable biometric unlock");
-                var result = await BiometricAuthentication.Current.AuthenticateAsync(request);
-                if (result.IsSuccessful)
+                var authenticationRequest = new AuthenticationRequest
+                {
+                    AllowPasswordAuth = true, // A chance to fallback to password auth
+                    Title = "Authenticate", // On iOS only the title is relevant, everything else is unused. 
+                    Subtitle = "Please authenticate using your biometric data",
+                    NegativeText = "Use Password", // if AllowPasswordAuth is set to true don't use this it will throw an exception on Android
+                    Description = "Biometric authentication is required for access",
+                    AuthStrength = AuthenticatorStrength.Strong // Only relevant on Android
+                };
+
+                var result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
+
+                if (result.Status == BiometricResponseStatus.Success)
                 {
                     Preferences.Set("use_biometrics", true);
                 }
                 else
                 {
                     BiometricSwitch.IsToggled = false;
+                    Preferences.Set("use_biometrics", false);
                 }
             }
             else
@@ -78,4 +89,4 @@ public partial class SecuritySettingsPage : ContentPage
     {
         Preferences.Set("auto_lock_index", AutoLockPicker.SelectedIndex);
     }
-} 
+}

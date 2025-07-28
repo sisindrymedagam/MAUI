@@ -6,8 +6,8 @@ namespace Passkeeper
     {
         public App()
         {
-            var themeIndex = Preferences.Get("theme_index", 0);
-            var theme = themeIndex switch
+            int themeIndex = Preferences.Get("theme_index", 0);
+            AppTheme theme = themeIndex switch
             {
                 1 => AppTheme.Light,
                 2 => AppTheme.Dark,

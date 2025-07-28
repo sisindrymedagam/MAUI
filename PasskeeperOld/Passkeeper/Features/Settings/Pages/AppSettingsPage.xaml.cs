@@ -10,11 +10,11 @@ public partial class AppSettingsPage : ContentPage
 
     private void LoadSettings()
     {
-        var themeIndex = Preferences.Get("theme_index", 0);
+        int themeIndex = Preferences.Get("theme_index", 0);
         ThemePicker.SelectedIndex = themeIndex;
 
-        var version = AppInfo.VersionString;
-        var build = AppInfo.BuildString;
+        string version = AppInfo.VersionString;
+        string build = AppInfo.BuildString;
         AppVersionLabel.Text = $"Version: {version} (Build {build})";
 
 #if ANDROID
@@ -27,15 +27,15 @@ public partial class AppSettingsPage : ContentPage
     private void OnThemeChanged(object sender, EventArgs e)
     {
         Preferences.Set("theme_index", ThemePicker.SelectedIndex);
-        
+
         // Apply theme
-        var theme = ThemePicker.SelectedIndex switch
+        AppTheme theme = ThemePicker.SelectedIndex switch
         {
             1 => AppTheme.Light,
             2 => AppTheme.Dark,
             _ => AppTheme.Unspecified
         };
-        
+
         if (Application.Current != null)
         {
             Application.Current.UserAppTheme = theme;
@@ -55,7 +55,7 @@ public partial class AppSettingsPage : ContentPage
     private async void OnCheckForUpdatesClicked(object sender, EventArgs e)
     {
 #if ANDROID
-        var url = $"https://play.google.com/store/apps/details?id={AppInfo.PackageName}";
+        string url = $"https://play.google.com/store/apps/details?id={AppInfo.PackageName}";
 #elif IOS
         var appStoreId = "1234567890"; // TODO: Replace with your app's ID
         var url = $"https://apps.apple.com/app/id{appStoreId}";
@@ -80,10 +80,10 @@ public partial class AppSettingsPage : ContentPage
 
     private async void OnClearDataClicked(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Clear All Data", 
-            "This will permanently delete all your passwords and settings. This action cannot be undone.", 
+        bool confirm = await DisplayAlert("Clear All Data",
+            "This will permanently delete all your passwords and settings. This action cannot be undone.",
             "Clear All", "Cancel");
-        
+
         if (confirm)
         {
             try
@@ -91,14 +91,11 @@ public partial class AppSettingsPage : ContentPage
                 // Clear all stored data
                 SecureStorage.Remove("app_pin");
                 Preferences.Clear();
-                
+
                 await DisplayAlert("Success", "All data has been cleared. The app will restart.", "OK");
-                
+
                 // Restart the app
-                if (Application.Current != null)
-                {
-                    Application.Current.Quit();
-                }
+                Application.Current?.Quit();
             }
             catch (Exception ex)
             {
@@ -106,4 +103,4 @@ public partial class AppSettingsPage : ContentPage
             }
         }
     }
-} 
+}

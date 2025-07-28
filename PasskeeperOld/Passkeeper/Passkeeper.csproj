@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0-android</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios;net9.0-maccatalyst;net9.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
@@ -81,8 +82,8 @@
     <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
-    <PackageReference Include="Oscore.Maui.Biometric" Version="2.4.1" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
+    <PackageReference Include="Plugin.Maui.Biometric" Version="0.0.7" />
   </ItemGroup>
 
   <ItemGroup>

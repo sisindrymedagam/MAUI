@@ -30,7 +30,7 @@ public partial class OptionTileComponent : ContentView
 
     private void SetupGestureRecognizers()
     {
-        var tapGesture = new TapGestureRecognizer();
+        TapGestureRecognizer tapGesture = new();
         tapGesture.Tapped += OnTapped;
         this.GestureRecognizers.Add(tapGesture);
     }

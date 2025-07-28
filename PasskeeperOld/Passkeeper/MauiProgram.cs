@@ -1,5 +1,6 @@
 ﻿using MetroLog.MicrosoftExtensions;
 using MetroLog.Operators;
+using Plugin.Maui.Biometric;
 
 namespace Passkeeper;
 
@@ -10,7 +11,6 @@ public static class MauiProgram
         MauiAppBuilder builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseBiometricAuthentication()
             .UseMauiCommunityToolkit()
             .UseFluentMauiIcons()
             .UseMauiIconsCore(x =>
@@ -22,6 +22,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+        builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
 
         builder.Logging
             .AddTraceLogger(

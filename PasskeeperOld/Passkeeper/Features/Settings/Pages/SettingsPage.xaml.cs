@@ -1,5 +1,3 @@
-using Maui.Biometric;
-
 namespace Passkeeper.Features.Settings.Pages;
 
 public partial class SettingsPage : ContentPage

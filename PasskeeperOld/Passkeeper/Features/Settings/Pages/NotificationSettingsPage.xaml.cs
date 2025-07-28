@@ -15,8 +15,8 @@ public partial class NotificationSettingsPage : ContentPage
         FailedLoginSwitch.IsToggled = Preferences.Get("failed_login_alerts", true);
         PasswordExpirySwitch.IsToggled = Preferences.Get("password_expiry_alerts", true);
 
-        var time = Preferences.Get("notification_time", "08:00");
-        if (TimeSpan.TryParse(time, out var parsedTime))
+        string time = Preferences.Get("notification_time", "08:00");
+        if (TimeSpan.TryParse(time, out TimeSpan parsedTime))
             NotificationTimePicker.Time = parsedTime;
     }
 
@@ -75,4 +75,4 @@ public partial class NotificationSettingsPage : ContentPage
     {
         Console.WriteLine("[DEBUG] Cancel all notifications");
     }
-} 
+}

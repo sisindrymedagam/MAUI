@@ -1,5 +1,4 @@
 using Passkeeper.Features.MFACodes.Models;
-using Passkeeper.Helpers;
 
 namespace Passkeeper.Features.MFACodes.Views;
 
@@ -9,7 +8,7 @@ public partial class MFACodeItemView : ContentView
     {
         InitializeComponent();
     }
-    
+
     private async void OnCopyClicked(object sender, EventArgs e)
     {
         if (BindingContext is MFACode mfaCode)
@@ -18,4 +17,4 @@ public partial class MFACodeItemView : ContentView
             await ToastHelper.ShowAsync("Code copied to clipboard");
         }
     }
-} 
+}

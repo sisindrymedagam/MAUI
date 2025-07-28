@@ -1,12 +1,10 @@
-using System.Windows.Input;
-
 namespace Passkeeper.Components;
 
 public partial class CustomPinKeyboard : ContentView
 {
     private string _currentPin = "";
     private readonly Label[] _pinDots;
-    
+
     public event EventHandler<string>? PinSubmitted;
     public event EventHandler? PinCleared;
 
@@ -29,7 +27,7 @@ public partial class CustomPinKeyboard : ContentView
     {
         if (_currentPin.Length > 0)
         {
-            _currentPin = _currentPin.Substring(0, _currentPin.Length - 1);
+            _currentPin = _currentPin[..^1];
             UpdatePinDisplay();
         }
     }
@@ -56,8 +54,8 @@ public partial class CustomPinKeyboard : ContentView
             _pinDots[i].IsVisible = i < _currentPin.Length;
             if (i < _currentPin.Length)
             {
-                _pinDots[i].TextColor = Application.Current?.RequestedTheme == AppTheme.Dark 
-                    ? Colors.White 
+                _pinDots[i].TextColor = Application.Current?.RequestedTheme == AppTheme.Dark
+                    ? Colors.White
                     : Colors.Black;
             }
         }
@@ -74,4 +72,4 @@ public partial class CustomPinKeyboard : ContentView
         _currentPin = pin;
         UpdatePinDisplay();
     }
-} 
+}

@@ -1,6 +1,4 @@
-﻿using MauiIcons.Core;
-using Passkeeper.Helpers;
-using System.Text;
+﻿using System.Text;
 
 namespace Passkeeper.Features.Password.Views;
 

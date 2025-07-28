@@ -1,4 +1,4 @@
-﻿using Maui.Biometric;
+﻿using Plugin.Maui.Biometric;
 
 namespace Passkeeper.Features.Onboarding.Pages;
 
@@ -18,9 +18,17 @@ public partial class PinLockPage : ContentPage
         bool useBiometrics = Preferences.Get("use_biometrics", false);
         if (useBiometrics)
         {
-            var request = new AuthenticationRequest(title: "Authenticate", reason: "Please authenticate to proceed");
-            var result = await BiometricAuthentication.Current.AuthenticateAsync(request);
-            if (result.IsSuccessful)
+            var authenticationRequest = new AuthenticationRequest
+            {
+                AllowPasswordAuth = true, // A chance to fallback to password auth
+                Title = "Authenticate", // On iOS only the title is relevant, everything else is unused. 
+                Subtitle = "Please authenticate using your biometric data",
+                NegativeText = "Use Password", // if AllowPasswordAuth is set to true don't use this it will throw an exception on Android
+                Description = "Biometric authentication is required for access",
+                AuthStrength = AuthenticatorStrength.Strong // Only relevant on Android
+            };
+            var result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
+            if (result.Status == BiometricResponseStatus.Success)
             {
                 SetShellPage();
             }
