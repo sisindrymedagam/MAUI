@@ -1,5 +1,4 @@
 using OtpNet;
-using Passkeeper.Features.MFACodes.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 

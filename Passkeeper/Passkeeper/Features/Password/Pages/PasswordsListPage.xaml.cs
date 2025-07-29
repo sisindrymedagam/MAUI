@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Passkeeper.Features.Password.Services;
 using Passkeeper.Features.Settings.Pages;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -8,50 +9,101 @@ namespace Passkeeper.Features.Password.Pages;
 public partial class PasswordsListPage : ContentPage
 {
     private readonly ILogger<PasswordsListPage> _logger;
+    private readonly PasswordStorageService _passwordService;
 
-    public ObservableCollection<PasswordListView> PasswordItems { get; set; }
-    //public ObservableCollection<CompanyListView> CompanyItems { get; set; }
-
-    public ICommand? RefreshCommand { get; }
-
+    public ObservableCollection<Models.Password> PasswordItems { get; set; } = [];
+    public ICommand RefreshCommand { get; }
     private bool isRefreshing;
-
     public bool IsRefreshing
     {
         get => isRefreshing;
-        set
-        {
-            isRefreshing = value;
-            OnPropertyChanged();
-        }
+        set { isRefreshing = value; OnPropertyChanged(); }
     }
 
-    public PasswordsListPage(ILogger<PasswordsListPage> logger)
+    public PasswordsListPage(ILogger<PasswordsListPage> logger, PasswordStorageService passwordService)
     {
         InitializeComponent();
-        PasswordItems = PasswordsList.GetPasswordListView();
-        //CompanyItems = PasswordsList.GetCompanyListView();
-        _ = new MauiIcon();
+        _logger = logger;
+        _passwordService = passwordService;
         RefreshCommand = new Command(async () => await RefreshAsync());
         BindingContext = this;
-        _logger = logger;
     }
 
-    //Overrides the back button/gesture
-    protected override bool OnBackButtonPressed()
+    protected override async void OnAppearing()
     {
-        if (FloatingPanel.IsVisible)
+        base.OnAppearing();
+        await LoadPasswordsAsync();
+    }
+
+    private async Task LoadPasswordsAsync()
+    {
+        PasswordItems.Clear();
+        List<Models.Password> items = await _passwordService.GetPasswordsAsync();
+        foreach (Models.Password item in items)
+            PasswordItems.Add(item);
+    }
+
+    private async Task RefreshAsync()
+    {
+        IsRefreshing = true;
+        await LoadPasswordsAsync();
+        await ToastHelper.ShowAsync("List is refreshed.");
+        IsRefreshing = false;
+    }
+
+    private async void OnAddTapped(object sender, EventArgs e)
+    {
+        // Use DI to resolve PasswordStorageService for SavePasswordPage
+        await Navigation.PushAsync(new SavePasswordPage(_passwordService));
+    }
+
+    private async void OnEditPassword(object sender, object e)
+    {
+        if (e is Models.Password password)
         {
-            FloatingPanel.Hide();
-            return true;
+            await Navigation.PushAsync(new SavePasswordPage(_passwordService, password));
         }
-        if (GeneratePasswordPanel.IsVisible)
+    }
+
+    private async void OnDeletePassword(object sender, object e)
+    {
+        if (e is Models.Password password)
         {
-            GeneratePasswordPanel.Hide();
-            return true;
+            await _passwordService.DeletePasswordAsync(password);
+            await LoadPasswordsAsync();
         }
-        // Default behavior
-        return base.OnBackButtonPressed();
+    }
+
+    private void OnGenerateTapped(object sender, EventArgs e)
+    {
+        FloatingPanel.Hide(0);
+        GeneratePasswordPanel.Show();
+    }
+
+    private void OnSettingsTapped(object sender, EventArgs e)
+    {
+        FloatingPanel.Hide(0);
+        Navigation.PushAsync(new SettingsPage());
+    }
+
+    private void OpenAddAction(object sender, EventArgs e)
+    {
+        FloatingPanel.Show();
+    }
+
+    private void OnAboutTapped(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new AboutPage());
+    }
+
+    private void OnHelpTapped(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new HelpPage());
+    }
+
+    private void OnFeedbackTapped(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new FeedbackPage());
     }
 
     private void HideTabBar(object sender, EventArgs e)
@@ -63,52 +115,4 @@ public partial class PasswordsListPage : ContentPage
     {
         TabBarHelper.ShowTabBar(this);
     }
-
-    private void OpenAddAction(object sender, EventArgs e)
-    {
-        FloatingPanel.Show();
-    }
-
-    private async void OnAddTapped(object sender, EventArgs e)
-    {
-        FloatingPanel.Hide(0);
-        await Navigation.PushAsync(new SavePasswordPage());
-    }
-
-    private void OnGenerateTapped(object sender, EventArgs e)
-    {
-        FloatingPanel.Hide(0);
-        GeneratePasswordPanel.Show();
-    }
-
-    private async void OnSettingsTapped(object sender, EventArgs e)
-    {
-        FloatingPanel.Hide(0);
-        await Navigation.PushAsync(new SettingsPage());
-    }
-
-    private async void OnAboutTapped(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new AboutPage());
-    }
-
-    private async void OnHelpTapped(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new HelpPage());
-    }
-
-    private async void OnFeedbackTapped(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new FeedbackPage());
-    }
-
-    private async Task RefreshAsync()
-    {
-        IsRefreshing = true;
-        await Task.Delay(1500); // Simulate a delay
-
-        await ToastHelper.ShowAsync("List is refreshed.");
-        IsRefreshing = false;
-    }
-
 }

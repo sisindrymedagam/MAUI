@@ -18,7 +18,7 @@ public partial class PinLockPage : ContentPage
         bool useBiometrics = Preferences.Get("use_biometrics", false);
         if (useBiometrics)
         {
-            var authenticationRequest = new AuthenticationRequest
+            AuthenticationRequest authenticationRequest = new()
             {
                 AllowPasswordAuth = true, // A chance to fallback to password auth
                 Title = "Authenticate", // On iOS only the title is relevant, everything else is unused. 
@@ -27,7 +27,7 @@ public partial class PinLockPage : ContentPage
                 Description = "Biometric authentication is required for access",
                 AuthStrength = AuthenticatorStrength.Strong // Only relevant on Android
             };
-            var result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
+            AuthenticationResponse result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
             if (result.Status == BiometricResponseStatus.Success)
             {
                 SetShellPage();

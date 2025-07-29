@@ -60,7 +60,7 @@ public partial class AppSettingsPage : ContentPage
         var appStoreId = "1234567890"; // TODO: Replace with your app's ID
         var url = $"https://apps.apple.com/app/id{appStoreId}";
 #else
-        var url = "https://yourwebsite.com";
+        string url = "https://yourwebsite.com";
 #endif
         await Launcher.Default.OpenAsync(url);
     }

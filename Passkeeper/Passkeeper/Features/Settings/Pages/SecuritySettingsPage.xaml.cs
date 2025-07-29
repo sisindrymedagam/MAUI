@@ -48,10 +48,10 @@ public partial class SecuritySettingsPage : ContentPage
     {
         if (e.Value)
         {
-            var enrolledBioMetrics = await BiometricAuthenticationService.Default.GetEnrolledBiometricTypesAsync();
+            BiometricType[] enrolledBioMetrics = await BiometricAuthenticationService.Default.GetEnrolledBiometricTypesAsync();
             if (enrolledBioMetrics.Length > 0)
             {
-                var authenticationRequest = new AuthenticationRequest
+                AuthenticationRequest authenticationRequest = new()
                 {
                     AllowPasswordAuth = true, // A chance to fallback to password auth
                     Title = "Authenticate", // On iOS only the title is relevant, everything else is unused. 
@@ -61,7 +61,7 @@ public partial class SecuritySettingsPage : ContentPage
                     AuthStrength = AuthenticatorStrength.Strong // Only relevant on Android
                 };
 
-                var result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
+                AuthenticationResponse result = await BiometricAuthenticationService.Default.AuthenticateAsync(authenticationRequest, CancellationToken.None);
 
                 if (result.Status == BiometricResponseStatus.Success)
                 {

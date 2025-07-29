@@ -1,4 +1,3 @@
-using Passkeeper.Features.MFACodes.Models;
 using Passkeeper.Features.MFACodes.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

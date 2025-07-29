@@ -1,5 +1,6 @@
 ﻿using MetroLog.MicrosoftExtensions;
 using MetroLog.Operators;
+using Passkeeper.Features.Password.Services;
 using Plugin.Maui.Biometric;
 
 namespace Passkeeper;
@@ -24,6 +25,11 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
+        builder.Services.AddSingleton<PasswordStorageService>(provider =>
+        {
+            string dbPath = Path.Combine(FileSystem.Current.AppDataDirectory, "passwords.db3");
+            return new PasswordStorageService(dbPath);
+        });
 
         builder.Logging
             .AddTraceLogger(

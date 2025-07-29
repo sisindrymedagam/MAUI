@@ -1,5 +1,3 @@
-using Passkeeper.Features.MFACodes.Models;
-
 namespace Passkeeper.Features.MFACodes.Views;
 
 public partial class MFACodeItemView : ContentView
