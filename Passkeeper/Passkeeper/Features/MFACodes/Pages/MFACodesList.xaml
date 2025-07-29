@@ -4,51 +4,58 @@
              xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:views="clr-namespace:Passkeeper.Features.MFACodes.Views"
              xmlns:components="clr-namespace:Passkeeper.Components"
+             xmlns:helpers="clr-namespace:Passkeeper.Helpers"
              x:Class="Passkeeper.Features.MFACodes.Pages.MFACodesList"
              Title="Authenticator Codes">
     
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helpers:IsCollectionEmptyConverter x:Key="IsCollectionEmptyConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid RowDefinitions="Auto,*,Auto">
         
-        <!-- Debug Info -->
-        <Label Grid.Row="1" 
-               Text="{Binding MFACodes.Count, StringFormat='Debug: {0} codes loaded'}"
-               FontSize="12"
-               TextColor="Red"
-               HorizontalOptions="Center"
-               Margin="0,0,0,10" />
+        <!-- Empty State -->
+        <Label Grid.Row="0"
+               Text="No authenticator codes yet. Tap + to add your first code."
+               IsVisible="{Binding MFACodes.Count, Converter={StaticResource IsCollectionEmptyConverter}}"
+               FontSize="18"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" 
+               Padding="20"
+               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
         
         <!-- MFA Codes List -->
-        <RefreshView Grid.Row="2" 
+        <RefreshView Grid.Row="1" 
                      IsRefreshing="{Binding IsRefreshing}"
                      Command="{Binding RefreshCommand}">
             <CollectionView ItemsSource="{Binding MFACodes}"
                            SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <views:MFACodeItemView />
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="Delete" 
+                                              BackgroundColor="Red" 
+                                              CommandParameter="{Binding .}" 
+                                              Invoked="OnDeleteMFACode"/>
+                                    <SwipeItem Text="Edit" 
+                                              BackgroundColor="Orange" 
+                                              CommandParameter="{Binding .}" 
+                                              Invoked="OnEditMFACode"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <views:MFACodeItemView />
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout HorizontalOptions="Center" 
-                                       VerticalOptions="Center"
-                                       Spacing="16">
-                        <Label Text="No authenticator codes yet" 
-                               FontSize="18" 
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                               HorizontalOptions="Center" />
-                        <Label Text="Tap the + button to add your first authenticator code" 
-                               FontSize="14"
-                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
-                               HorizontalOptions="Center"
-                               HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
             </CollectionView>
         </RefreshView>
         
         <!-- Floating Action Button -->
-        <Button Grid.Row="3"
+        <Button Grid.Row="2"
                 icon:MauiIcon.Value="{icon:Fluent Icon=Add24, IconSize=30, IconColor=White}"
                 TextColor="White"
                 FontSize="32"

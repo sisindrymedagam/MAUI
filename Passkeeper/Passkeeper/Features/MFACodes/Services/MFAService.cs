@@ -1,6 +1,8 @@
 using OtpNet;
+using Passkeeper.Features.MFACodes.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using SQLite;
 
 namespace Passkeeper.Features.MFACodes.Services;
 
@@ -8,21 +10,52 @@ public class MFAService : INotifyPropertyChanged
 {
     private readonly Timer _timer;
     private readonly ObservableCollection<MFACode> _mfaCodes;
+    private readonly SQLiteAsyncConnection _database;
+    private bool _isInitialized = false;
 
     public ObservableCollection<MFACode> MFACodes => _mfaCodes;
 
-    public MFAService()
+    public MFAService(string dbPath)
     {
+        _database = new SQLiteAsyncConnection(dbPath);
         _mfaCodes = [];
         _timer = new Timer(UpdateCodes, null, 0, 1000); // Update every second
-        LoadSampleData();
+        
+        // Initialize database asynchronously
+        _ = InitializeAsync();
+    }
 
-        // Debug: Check if sample data was loaded
-        System.Diagnostics.Debug.WriteLine($"MFAService initialized with {_mfaCodes.Count} codes");
+    private async Task InitializeAsync()
+    {
+        await _database.CreateTableAsync<MFACode>();
+        await LoadCodesFromDatabase();
+        _isInitialized = true;
+    }
+
+    private async Task LoadCodesFromDatabase()
+    {
+        try
+        {
+            var codes = await _database.Table<MFACode>().ToListAsync();
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _mfaCodes.Clear();
+                foreach (var code in codes)
+                {
+                    _mfaCodes.Add(code);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading MFA codes: {ex.Message}");
+        }
     }
 
     private void UpdateCodes(object? state)
     {
+        if (!_isInitialized) return;
+        
         MainThread.BeginInvokeOnMainThread(() =>
         {
             foreach (MFACode mfaCode in _mfaCodes)
@@ -59,44 +92,32 @@ public class MFAService : INotifyPropertyChanged
         }
     }
 
-    private void LoadSampleData()
+    public async Task<int> SaveMFACodeAsync(MFACode mfaCode)
     {
-        // Sample data for demonstration
-        List<MFACode> sampleCodes =
-        [
-            new MFACode { Id = 1, Name = "Google", Issuer = "Google", Secret = "JBSWY3DPEHPK3PXP" },
-            new MFACode { Id = 2, Name = "Microsoft", Issuer = "Microsoft", Secret = "JBSWY3DPEHPK3PXP" },
-            new MFACode { Id = 3, Name = "GitHub", Issuer = "GitHub", Secret = "JBSWY3DPEHPK3PXP" },
-            new MFACode { Id = 4, Name = "Dropbox", Issuer = "Dropbox", Secret = "JBSWY3DPEHPK3PXP" },
-            new MFACode { Id = 5, Name = "Steam", Issuer = "Valve", Secret = "JBSWY3DPEHPK3PXP" }
-        ];
-
-        foreach (MFACode code in sampleCodes)
+        var result = mfaCode.Id == 0 ? await _database.InsertAsync(mfaCode) : await _database.UpdateAsync(mfaCode);
+        if (mfaCode.Id == 0)
         {
-            _mfaCodes.Add(code);
-            System.Diagnostics.Debug.WriteLine($"Added sample code: {code.DisplayName}");
+            mfaCode.Id = result;
+            MainThread.BeginInvokeOnMainThread(() => _mfaCodes.Add(mfaCode));
         }
-
-        System.Diagnostics.Debug.WriteLine($"Total codes loaded: {_mfaCodes.Count}");
+        return result;
     }
 
-    public void AddCode(string name, string issuer, string secret)
+    public async Task<int> DeleteMFACodeAsync(MFACode mfaCode)
     {
-        MFACode newCode = new()
-        {
-            Id = _mfaCodes.Count + 1,
-            Name = name,
-            Issuer = issuer,
-            Secret = secret
-        };
-
-        _mfaCodes.Add(newCode);
-        System.Diagnostics.Debug.WriteLine($"Added new code: {newCode.DisplayName}. Total: {_mfaCodes.Count}");
+        var result = await _database.DeleteAsync(mfaCode);
+        MainThread.BeginInvokeOnMainThread(() => _mfaCodes.Remove(mfaCode));
+        return result;
     }
 
-    public void RemoveCode(MFACode code)
+    public async Task<List<MFACode>> GetMFACodesAsync()
     {
-        _mfaCodes.Remove(code);
+        return await _database.Table<MFACode>().ToListAsync();
+    }
+
+    public async Task<MFACode?> GetMFACodeAsync(int id)
+    {
+        return await _database.Table<MFACode>().Where(m => m.Id == id).FirstOrDefaultAsync();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

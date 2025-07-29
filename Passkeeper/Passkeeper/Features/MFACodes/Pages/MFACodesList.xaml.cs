@@ -1,3 +1,4 @@
+using Passkeeper.Features.MFACodes.Models;
 using Passkeeper.Features.MFACodes.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -9,35 +10,24 @@ public partial class MFACodesList : ContentPage
     private readonly MFAService _mfaService;
 
     public MFAService MFAService => _mfaService;
-
-    // Direct property for easier binding
     public ObservableCollection<MFACode> MFACodes => _mfaService.MFACodes;
-
-    public ICommand? RefreshCommand { get; }
+    public ICommand RefreshCommand { get; }
 
     private bool isRefreshing;
     public bool IsRefreshing
     {
         get => isRefreshing;
-        set
-        {
-            isRefreshing = value;
-            OnPropertyChanged();
-        }
+        set { isRefreshing = value; OnPropertyChanged(); }
     }
 
-    public MFACodesList()
+    public MFACodesList(MFAService mfaService)
     {
         InitializeComponent();
-        _mfaService = new MFAService();
+        _mfaService = mfaService;
         RefreshCommand = new Command(async () => await RefreshAsync());
         BindingContext = this;
-
-        // Debug: Check if codes are loaded
-        System.Diagnostics.Debug.WriteLine($"MFACodes count: {_mfaService.MFACodes.Count}");
     }
 
-    // Override the back button/gesture
     protected override bool OnBackButtonPressed()
     {
         if (AddCodePanel.IsVisible)
@@ -50,7 +40,6 @@ public partial class MFACodesList : ContentPage
 
     private void HideTabBar(object sender, EventArgs e)
     {
-        // Hide tab bar when bottom sheet is shown
         if (Parent is Shell shell)
         {
             shell.FlyoutBehavior = FlyoutBehavior.Disabled;
@@ -59,7 +48,6 @@ public partial class MFACodesList : ContentPage
 
     private void ShowTabBar(object sender, EventArgs e)
     {
-        // Show tab bar when bottom sheet is hidden
         if (Parent is Shell shell)
         {
             shell.FlyoutBehavior = FlyoutBehavior.Disabled;
@@ -77,7 +65,7 @@ public partial class MFACodesList : ContentPage
         ClearAddForm();
     }
 
-    private void OnConfirmAdd(object sender, EventArgs e)
+    private async void OnConfirmAdd(object sender, EventArgs e)
     {
         string? name = NameEntry.Text?.Trim();
         string? issuer = IssuerEntry.Text?.Trim();
@@ -85,28 +73,57 @@ public partial class MFACodesList : ContentPage
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            DisplayAlert("Error", "Please enter an account name.", "OK");
+            await DisplayAlert("Error", "Please enter an account name.", "OK");
             return;
         }
 
         if (string.IsNullOrWhiteSpace(secret))
         {
-            DisplayAlert("Error", "Please enter a secret key.", "OK");
+            await DisplayAlert("Error", "Please enter a secret key.", "OK");
             return;
         }
 
-        // Add the new code
-        _mfaService.AddCode(name, issuer ?? "", secret);
+        // Create and save the new MFA code
+        var newCode = new MFACode
+        {
+            Name = name,
+            Issuer = issuer ?? "",
+            Secret = secret
+        };
 
-        // Debug: Check if code was added
-        System.Diagnostics.Debug.WriteLine($"Added code. Total count: {_mfaService.MFACodes.Count}");
+        await _mfaService.SaveMFACodeAsync(newCode);
 
         // Hide the panel and clear the form
         AddCodePanel.Hide();
         ClearAddForm();
 
         // Show success message
-        DisplayAlert("Success", "Authenticator code added successfully!", "OK");
+        await DisplayAlert("Success", "Authenticator code added successfully!", "OK");
+    }
+
+    private async void OnDeleteMFACode(object sender, object e)
+    {
+        if (e is MFACode mfaCode)
+        {
+            bool confirm = await DisplayAlert("Delete Code", 
+                $"Are you sure you want to delete '{mfaCode.DisplayName}'?", 
+                "Delete", "Cancel");
+            
+            if (confirm)
+            {
+                await _mfaService.DeleteMFACodeAsync(mfaCode);
+            }
+        }
+    }
+
+    private void OnEditMFACode(object sender, object e)
+    {
+        if (e is MFACode mfaCode)
+        {
+            // TODO: Implement edit functionality
+            // For now, just show the code details
+            DisplayAlert("Edit Code", $"Editing: {mfaCode.DisplayName}", "OK");
+        }
     }
 
     private void ClearAddForm()
@@ -119,10 +136,7 @@ public partial class MFACodesList : ContentPage
     private async Task RefreshAsync()
     {
         IsRefreshing = true;
-
-        // Simulate refresh delay
-        await Task.Delay(1000);
-
+        await Task.Delay(1000); // Simulate refresh delay
         IsRefreshing = false;
     }
 }

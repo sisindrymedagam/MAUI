@@ -1,7 +1,10 @@
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using SQLite;
 
 namespace Passkeeper.Features.MFACodes.Models;
 
+[Table("MFACodes")]
 public class MFACode : INotifyPropertyChanged
 {
     private string _name = string.Empty;
@@ -11,68 +14,75 @@ public class MFACode : INotifyPropertyChanged
     private int _timeRemaining = 30;
     private bool _isExpiringSoon = false;
 
+    [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
+    [Column("Name")]
     public string Name
     {
         get => _name;
         set
         {
             _name = value;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(DisplayName));
         }
     }
 
+    [Column("Secret")]
     public string Secret
     {
         get => _secret;
         set
         {
             _secret = value;
-            OnPropertyChanged(nameof(Secret));
+            OnPropertyChanged();
         }
     }
 
+    [Column("Issuer")]
     public string Issuer
     {
         get => _issuer;
         set
         {
             _issuer = value;
-            OnPropertyChanged(nameof(Issuer));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(DisplayName));
         }
     }
 
+    [Column("Code")]
     public string Code
     {
         get => _code;
         set
         {
             _code = value;
-            OnPropertyChanged(nameof(Code));
+            OnPropertyChanged();
         }
     }
 
+    [Column("TimeRemaining")]
     public int TimeRemaining
     {
         get => _timeRemaining;
         set
         {
             _timeRemaining = value;
-            OnPropertyChanged(nameof(TimeRemaining));
+            OnPropertyChanged();
             IsExpiringSoon = value <= 5;
         }
     }
 
+    [Column("IsExpiringSoon")]
     public bool IsExpiringSoon
     {
         get => _isExpiringSoon;
         set
         {
             _isExpiringSoon = value;
-            OnPropertyChanged(nameof(IsExpiringSoon));
+            OnPropertyChanged();
         }
     }
 
@@ -80,7 +90,7 @@ public class MFACode : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged(string propertyName)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
