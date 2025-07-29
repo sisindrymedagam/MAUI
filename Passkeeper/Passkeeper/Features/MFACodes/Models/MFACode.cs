@@ -9,7 +9,6 @@ public class MFACode : INotifyPropertyChanged
 {
     private string _name = string.Empty;
     private string _secret = string.Empty;
-    private string _issuer = string.Empty;
     private string _code = string.Empty;
     private int _timeRemaining = 30;
     private bool _isExpiringSoon = false;
@@ -37,18 +36,6 @@ public class MFACode : INotifyPropertyChanged
         {
             _secret = value;
             OnPropertyChanged();
-        }
-    }
-
-    [Column("Issuer")]
-    public string Issuer
-    {
-        get => _issuer;
-        set
-        {
-            _issuer = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(DisplayName));
         }
     }
 
@@ -86,7 +73,7 @@ public class MFACode : INotifyPropertyChanged
         }
     }
 
-    public string DisplayName => string.IsNullOrEmpty(Issuer) ? Name : $"{Issuer} ({Name})";
+    public string DisplayName => Name;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

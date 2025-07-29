@@ -5,56 +5,89 @@
              xmlns:helpers="clr-namespace:Passkeeper.Helpers"
              x:Class="Passkeeper.Features.MFACodes.Views.MFACodeItemView">
     
-    <Frame CornerRadius="16" 
-           Padding="20" 
-           Margin="0,8"
-           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-           BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+    <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+            Stroke="Transparent"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 16"
+            Margin="16,8"
+            Padding="20">
+        <Border.Shadow>
+            <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40FFFFFF}" 
+                    Offset="0,2" 
+                    Radius="8" 
+                    Opacity="0.1" />
+        </Border.Shadow>
         
-        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+            
+            <!-- Avatar/Icon -->
+            <Border Grid.Row="0" 
+                    Grid.Column="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Green100}, Dark={StaticResource Green900}}"
+                    StrokeShape="RoundRectangle 12"
+                    WidthRequest="48"
+                    HeightRequest="48"
+                    Margin="0,0,16,0">
+                <Label Text="{Binding Name, Converter={StaticResource FirstLetterConverter}}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Green600}, Dark={StaticResource Green300}}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
             
             <!-- Account Info -->
-            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="4">
+            <VerticalStackLayout Grid.Row="0" 
+                                Grid.Column="1" 
+                                Spacing="4"
+                                VerticalOptions="Center">
                 <Label Text="{Binding DisplayName}" 
-                       FontSize="18" 
+                       FontSize="16" 
                        FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}"
+                       LineBreakMode="TailTruncation" />
                 <Label Text="{Binding Issuer}" 
                        FontSize="14"
-                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       IsVisible="{Binding Issuer, Converter={x:Static helpers:StringToBoolConverter.Instance}}" />
+                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                       IsVisible="{Binding Issuer, Converter={StaticResource StringToVisibilityConverter}}"
+                       LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
             
             <!-- Timer -->
-            <Frame Grid.Row="0" Grid.Column="1" 
-                   CornerRadius="8" 
-                   Padding="8,4"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
-                   BorderColor="Transparent">
+            <Border Grid.Row="0" 
+                    Grid.Column="2"
+                    BackgroundColor="{Binding IsExpiringSoon, Converter={StaticResource BoolToColorConverter}}"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="8,4"
+                    Margin="0,0,0,0">
                 <Label Text="{Binding TimeRemaining, StringFormat='{0}s'}" 
                        FontSize="12" 
                        FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-            </Frame>
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                       HorizontalOptions="Center" />
+            </Border>
             
             <!-- Code Display -->
-            <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                   CornerRadius="12" 
-                   Padding="16,12"
-                   Margin="0,12,0,0"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray800}}"
-                   BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}">
+            <Border Grid.Row="1" 
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="3"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16,12"
+                    Margin="0,16,0,0"
+                    Stroke="Transparent">
                 
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Text="{Binding Code}" 
-                           FontSize="24" 
+                           FontSize="28" 
                            FontAttributes="Bold"
                            FontFamily="Monospace"
                            HorizontalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}"
+                           CharacterSpacing="4" />
                     
                     <Button Grid.Column="1"
-                            icon:MauiIcon.Value="{icon:Fluent Icon=Copy24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}"
+                            icon:MauiIcon.Value="{icon:Fluent Icon=Copy24, IconColor={AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}}"
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
                             Padding="8"
@@ -65,10 +98,10 @@
                     </Button>
                 </Grid>
                 
-            </Frame>
+            </Border>
             
         </Grid>
         
-    </Frame>
+    </Border>
     
 </ContentView> 

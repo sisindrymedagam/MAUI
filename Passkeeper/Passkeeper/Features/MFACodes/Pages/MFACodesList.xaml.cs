@@ -68,7 +68,6 @@ public partial class MFACodesList : ContentPage
     private async void OnConfirmAdd(object sender, EventArgs e)
     {
         string? name = NameEntry.Text?.Trim();
-        string? issuer = IssuerEntry.Text?.Trim();
         string? secret = SecretEntry.Text?.Trim();
 
         if (string.IsNullOrWhiteSpace(name))
@@ -87,7 +86,6 @@ public partial class MFACodesList : ContentPage
         var newCode = new MFACode
         {
             Name = name,
-            Issuer = issuer ?? "",
             Secret = secret
         };
 
@@ -129,7 +127,6 @@ public partial class MFACodesList : ContentPage
     private void ClearAddForm()
     {
         NameEntry.Text = "";
-        IssuerEntry.Text = "";
         SecretEntry.Text = "";
     }
 
