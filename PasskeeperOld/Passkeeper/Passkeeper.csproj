@@ -87,10 +87,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Passkeeper.Models\Passkeeper.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Components\DividerComponent.xaml.cs">
       <DependentUpon>DividerComponent.xaml</DependentUpon>
     </Compile>
@@ -173,6 +169,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Features\Settings\Pages\AppSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Resources\Styles\Styles.loght.xaml">

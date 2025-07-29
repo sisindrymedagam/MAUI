@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Passkeeper.Models;
+namespace Passkeeper.Features.Password.Models;
 
 public class PasswordListView
 {
