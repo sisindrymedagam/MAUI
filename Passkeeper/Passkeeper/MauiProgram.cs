@@ -26,16 +26,8 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
-        builder.Services.AddSingleton<PasswordStorageService>(provider =>
-        {
-            string dbPath = Path.Combine(FileSystem.Current.AppDataDirectory, "passwords.db3");
-            return new PasswordStorageService(dbPath);
-        });
-        builder.Services.AddSingleton<MFAService>(provider =>
-        {
-            var dbPath = Path.Combine(FileSystem.Current.AppDataDirectory, "passwords.db3");
-            return new MFAService(dbPath);
-        });
+        builder.Services.AddSingleton<PasswordStorageService>();
+        builder.Services.AddSingleton<MFAService>();
 
         builder.Logging
             .AddTraceLogger(

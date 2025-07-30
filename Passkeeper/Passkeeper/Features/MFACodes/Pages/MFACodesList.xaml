@@ -7,7 +7,7 @@
              xmlns:helpers="clr-namespace:Passkeeper.Helpers"
              x:Class="Passkeeper.Features.MFACodes.Pages.MFACodesList"
              Title="Authenticator Codes"
-             BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray950}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray950}}">
     
     <ContentPage.Resources>
         <ResourceDictionary>

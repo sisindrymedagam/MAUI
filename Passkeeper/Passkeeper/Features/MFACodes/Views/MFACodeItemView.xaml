@@ -71,7 +71,7 @@
             <Border Grid.Row="1" 
                     Grid.Column="0" 
                     Grid.ColumnSpan="3"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
                     StrokeShape="RoundRectangle 12"
                     Padding="16,12"
                     Margin="0,16,0,0"

@@ -7,11 +7,9 @@ public class PasswordStorageService
     private readonly SQLiteAsyncConnection _database;
     private bool _isInitialized = false;
 
-    public PasswordStorageService(string dbPath)
+    public PasswordStorageService()
     {
-        _database = new SQLiteAsyncConnection(dbPath);
-        // Initialize database asynchronously
-        _ = InitializeAsync();
+        _database = new SQLiteAsyncConnection(Constants.DatabasePath);
     }
 
     private async Task InitializeAsync()
