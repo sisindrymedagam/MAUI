@@ -14,49 +14,58 @@ namespace Passkeeper
                 _ => AppTheme.Unspecified
             };
 
-            if (Application.Current != null)
+            if (Current != null)
             {
-                Application.Current.UserAppTheme = theme;
+                Current.UserAppTheme = theme;
             }
             InitializeComponent();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            string? pin = SecureStorage.GetAsync("app_pin").Result;
+            //string? pin = SecureStorage.GetAsync("app_pin").Result;
+            //string? intro = SecureStorage.GetAsync("intro_done").Result;
+            //if (intro is not "1")
+            //{
+            //    if (string.IsNullOrEmpty(pin))
+            //    {
+            //        // Show PIN setup page for first-time users
+            //        return new Window(new SetupPinPage());
+            //    }
+            //    else
+            //    {
+            //        // Show PIN lock page for returning users
+            //        return new Window(new PinLockPage());
+            //    }
+            //}
 
-            if (string.IsNullOrEmpty(pin))
-            {
-                // Show PIN setup page for first-time users
-                return new Window(new SetupPinPage());
-            }
-            else
-            {
-                // Show PIN lock page for returning users
-                return new Window(new PinLockPage());
-            }
+            return new Window(new AppShell());
         }
 
-        protected override void OnResume()
-        {
-            string? pin = SecureStorage.GetAsync("app_pin").Result;
+        //protected override void OnResume()
+        //{
+        //    string? pin = SecureStorage.GetAsync("app_pin").Result;
 
-            if (string.IsNullOrEmpty(pin))
-            {
-                // Show PIN setup page for first-time users
-                if (Application.Current?.Windows.Count > 0)
-                {
-                    Application.Current.Windows[0].Page = new SetupPinPage();
-                }
-            }
-            else
-            {
-                // Show PIN lock page for returning users
-                if (Application.Current?.Windows.Count > 0)
-                {
-                    Application.Current.Windows[0].Page = new PinLockPage();
-                }
-            }
-        }
+        //    string? intro = SecureStorage.GetAsync("intro_done").Result;
+        //    if (intro is not "1")
+        //    {
+        //        if (!string.IsNullOrEmpty(pin))
+        //        {
+        //            // Show PIN lock page for returning users
+        //            if (Current?.Windows.Count > 0)
+        //            {
+        //                Current.Windows[0].Page = new PinLockPage();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Current.Windows[0].Page = new AppShell();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Current.Windows[0].Page = new AppShell();
+        //    }
+        //}
     }
 }

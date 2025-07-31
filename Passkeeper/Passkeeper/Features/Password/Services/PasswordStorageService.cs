@@ -9,48 +9,38 @@ public class PasswordStorageService
 
     public PasswordStorageService()
     {
-        _database = new SQLiteAsyncConnection(Constants.DatabasePath);
+        _database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
     }
 
     private async Task InitializeAsync()
     {
-        await _database.CreateTableAsync<Models.Password>();
+        if (_isInitialized)
+            return;
+        await _database.CreateTableAsync<Models.PasswordDto>();
         _isInitialized = true;
     }
 
-    public async Task<List<Models.Password>> GetPasswordsAsync()
+    public async Task<List<Models.PasswordDto>> GetListAsync()
     {
-        if (!_isInitialized)
-        {
-            await InitializeAsync();
-        }
-        return await _database.Table<Models.Password>().ToListAsync();
+        await InitializeAsync();
+        return await _database.Table<Models.PasswordDto>().ToListAsync();
     }
 
-    public async Task<Models.Password?> GetPasswordAsync(int id)
+    public async Task<Models.PasswordDto?> GetAsync(int id)
     {
-        if (!_isInitialized)
-        {
-            await InitializeAsync();
-        }
-        return await _database.Table<Models.Password>().Where(p => p.Id == id).FirstOrDefaultAsync();
+        await InitializeAsync();
+        return await _database.Table<Models.PasswordDto>().Where(p => p.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> SavePasswordAsync(Models.Password password)
+    public async Task<int> SaveAsync(Models.PasswordDto item)
     {
-        if (!_isInitialized)
-        {
-            await InitializeAsync();
-        }
-        return await (password.Id == 0 ? _database.InsertAsync(password) : _database.UpdateAsync(password));
+        await InitializeAsync();
+        return await (item.Id == 0 ? _database.InsertAsync(item) : _database.UpdateAsync(item));
     }
 
-    public async Task<int> DeletePasswordAsync(Models.Password password)
+    public async Task<int> DeleteAsync(Models.PasswordDto item)
     {
-        if (!_isInitialized)
-        {
-            await InitializeAsync();
-        }
-        return await _database.DeleteAsync(password);
+        await InitializeAsync();
+        return await _database.DeleteAsync(item);
     }
 }

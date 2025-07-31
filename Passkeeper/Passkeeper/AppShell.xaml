@@ -10,10 +10,10 @@
 
     <TabBar>
         <Tab Title="Passwords" icon:MauiIcon.Value="{icon:Fluent Icon=Key24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
-            <ShellContent ContentTemplate="{DataTemplate pw:PasswordsListPage}" />
+            <ShellContent ContentTemplate="{DataTemplate pw:PasswordListPage}" />
         </Tab>
         <Tab Title="Codes" icon:MauiIcon.Value="{icon:Fluent Icon=Password24, IconColor={AppThemeBinding Light=#000000, Dark=#FFFFFF }}">
-            <ShellContent ContentTemplate="{DataTemplate mfa:MFACodesList}" />
+            <ShellContent ContentTemplate="{DataTemplate mfa:MFACodesListPage}" />
         </Tab>
         <!--<Tab Title="Payments" Icon="payments.svg">
             <ShellContent ContentTemplate="{DataTemplate local:PaymentsPage}" Route="PaymentsPage" />

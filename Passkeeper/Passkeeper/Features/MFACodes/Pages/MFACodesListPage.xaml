@@ -5,8 +5,8 @@
              xmlns:views="clr-namespace:Passkeeper.Features.MFACodes.Views"
              xmlns:components="clr-namespace:Passkeeper.Components"
              xmlns:helpers="clr-namespace:Passkeeper.Helpers"
-             x:Class="Passkeeper.Features.MFACodes.Pages.MFACodesList"
-             Title="Authenticator Codes"
+             x:Class="Passkeeper.Features.MFACodes.Pages.MFACodesListPage"
+             Title="2FA Codes"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray950}}">
     
     <ContentPage.Resources>

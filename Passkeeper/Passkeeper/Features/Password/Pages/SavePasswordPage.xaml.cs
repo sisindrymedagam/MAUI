@@ -7,8 +7,8 @@ namespace Passkeeper.Features.Password.Pages;
 public partial class SavePasswordPage : ContentPage, INotifyPropertyChanged
 {
     private readonly PasswordStorageService _passwordService;
-    private Models.Password _password;
-    public Models.Password Password
+    private Models.PasswordDto _password;
+    public Models.PasswordDto Password
     {
         get => _password;
         set { _password = value; OnPropertyChanged(); }
@@ -20,22 +20,22 @@ public partial class SavePasswordPage : ContentPage, INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public SavePasswordPage(PasswordStorageService passwordService, Models.Password? password = null)
+    public SavePasswordPage(PasswordStorageService passwordService, Models.PasswordDto? password = null)
     {
         InitializeComponent();
         _passwordService = passwordService;
-        Password = password ?? new Models.Password();
+        Password = password ?? new Models.PasswordDto();
         BindingContext = this;
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(Password.Url) || string.IsNullOrWhiteSpace(Password.Username) || string.IsNullOrWhiteSpace(Password.PasswordEncrypted))
+        if (string.IsNullOrWhiteSpace(Password.Url) || string.IsNullOrWhiteSpace(Password.Username) || string.IsNullOrWhiteSpace(Password.Password))
         {
             await DisplayAlert("Missing Fields", "Website URL, Username, and Password are required.", "OK");
             return;
         }
-        await _passwordService.SavePasswordAsync(Password);
+        await _passwordService.SaveAsync(Password);
         await Navigation.PopAsync();
     }
 

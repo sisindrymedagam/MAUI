@@ -6,12 +6,12 @@ using System.Windows.Input;
 
 namespace Passkeeper.Features.Password.Pages;
 
-public partial class PasswordsListPage : ContentPage
+public partial class PasswordListPage : ContentPage
 {
-    private readonly ILogger<PasswordsListPage> _logger;
+    private readonly ILogger<PasswordListPage> _logger;
     private readonly PasswordStorageService _passwordService;
 
-    public ObservableCollection<Models.Password> PasswordItems { get; set; } = [];
+    public ObservableCollection<Models.PasswordDto> PasswordItems { get; set; } = [];
     public ICommand RefreshCommand { get; }
     private bool isRefreshing;
     public bool IsRefreshing
@@ -20,7 +20,7 @@ public partial class PasswordsListPage : ContentPage
         set { isRefreshing = value; OnPropertyChanged(); }
     }
 
-    public PasswordsListPage(ILogger<PasswordsListPage> logger, PasswordStorageService passwordService)
+    public PasswordListPage(ILogger<PasswordListPage> logger, PasswordStorageService passwordService)
     {
         InitializeComponent();
         _logger = logger;
@@ -38,8 +38,8 @@ public partial class PasswordsListPage : ContentPage
     private async Task LoadPasswordsAsync()
     {
         PasswordItems.Clear();
-        List<Models.Password> items = await _passwordService.GetPasswordsAsync();
-        foreach (Models.Password item in items)
+        List<Models.PasswordDto> items = await _passwordService.GetListAsync();
+        foreach (Models.PasswordDto item in items)
             PasswordItems.Add(item);
     }
 
@@ -55,23 +55,6 @@ public partial class PasswordsListPage : ContentPage
     {
         // Use DI to resolve PasswordStorageService for SavePasswordPage
         await Navigation.PushAsync(new SavePasswordPage(_passwordService));
-    }
-
-    private async void OnEditPassword(object sender, object e)
-    {
-        if (e is Models.Password password)
-        {
-            await Navigation.PushAsync(new SavePasswordPage(_passwordService, password));
-        }
-    }
-
-    private async void OnDeletePassword(object sender, object e)
-    {
-        if (e is Models.Password password)
-        {
-            await _passwordService.DeletePasswordAsync(password);
-            await LoadPasswordsAsync();
-        }
     }
 
     private void OnGenerateTapped(object sender, EventArgs e)

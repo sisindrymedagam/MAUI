@@ -1,16 +1,13 @@
-using Passkeeper.Features.MFACodes.Models;
 using Passkeeper.Features.MFACodes.Services;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Passkeeper.Features.MFACodes.Pages;
 
-public partial class MFACodesList : ContentPage
+public partial class MFACodesListPage : ContentPage
 {
     private readonly MFAService _mfaService;
 
     public MFAService MFAService => _mfaService;
-    public ObservableCollection<MFACode> MFACodes => _mfaService.MFACodes;
     public ICommand RefreshCommand { get; }
 
     private bool isRefreshing;
@@ -20,7 +17,7 @@ public partial class MFACodesList : ContentPage
         set { isRefreshing = value; OnPropertyChanged(); }
     }
 
-    public MFACodesList(MFAService mfaService)
+    public MFACodesListPage(MFAService mfaService)
     {
         InitializeComponent();
         _mfaService = mfaService;
@@ -83,13 +80,13 @@ public partial class MFACodesList : ContentPage
         }
 
         // Create and save the new MFA code
-        var newCode = new MFACode
+        var newCode = new MFACodeDto
         {
-            Name = name,
-            Secret = secret
+            AccountName = name,
+            AccountSecret = secret
         };
 
-        await _mfaService.SaveMFACodeAsync(newCode);
+        await _mfaService.SaveAsync(newCode);
 
         // Hide the panel and clear the form
         AddCodePanel.Hide();
@@ -101,26 +98,26 @@ public partial class MFACodesList : ContentPage
 
     private async void OnDeleteMFACode(object sender, object e)
     {
-        if (e is MFACode mfaCode)
+        if (e is MFACodeDto mfaCode)
         {
             bool confirm = await DisplayAlert("Delete Code", 
-                $"Are you sure you want to delete '{mfaCode.DisplayName}'?", 
+                $"Are you sure you want to delete '{mfaCode.AccountName}'?", 
                 "Delete", "Cancel");
             
             if (confirm)
             {
-                await _mfaService.DeleteMFACodeAsync(mfaCode);
+                await _mfaService.DeleteAsync(mfaCode);
             }
         }
     }
 
     private void OnEditMFACode(object sender, object e)
     {
-        if (e is MFACode mfaCode)
+        if (e is MFACodeDto mfaCode)
         {
             // TODO: Implement edit functionality
             // For now, just show the code details
-            DisplayAlert("Edit Code", $"Editing: {mfaCode.DisplayName}", "OK");
+            DisplayAlert("Edit Code", $"Editing: {mfaCode.AccountName}", "OK");
         }
     }
 

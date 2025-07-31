@@ -1,3 +1,5 @@
+using System.Net.NetworkInformation;
+
 namespace Passkeeper.Features.Onboarding.Pages;
 
 public partial class SetupPinPage : ContentPage
@@ -70,6 +72,7 @@ public partial class SetupPinPage : ContentPage
 
         if (confirm)
         {
+            await SecureStorage.SetAsync("intro_done", "1");
             // Navigate to main app without PIN
             if (Application.Current?.Windows.Count > 0)
             {

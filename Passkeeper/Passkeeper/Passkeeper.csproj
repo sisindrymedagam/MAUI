@@ -42,10 +42,6 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
     <MtouchDebug>True</MtouchDebug>
   </PropertyGroup>
@@ -77,14 +73,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AathifMahir.Maui.MauiIcons.Fluent" Version="4.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
-    <!--<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />-->
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="Plugin.Maui.Biometric" Version="0.0.7" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
@@ -104,8 +101,8 @@
     <Compile Update="Features\Onboarding\Pages\SetupPinPage.xaml.cs">
       <DependentUpon>SetupPinPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Features\Password\Pages\PasswordsListPage.xaml.cs">
-      <DependentUpon>PasswordsListPage.xaml</DependentUpon>
+    <Compile Update="Features\Password\Pages\PasswordListPage.xaml.cs">
+      <DependentUpon>PasswordListPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Features\Settings\Pages\SecuritySettingsPage.xaml.cs">
       <DependentUpon>SecuritySettingsPage.xaml</DependentUpon>
@@ -119,8 +116,8 @@
     <Compile Update="Features\Settings\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Features\MFACodes\Pages\MFACodesList.xaml.cs">
-      <DependentUpon>MFACodesList.xaml</DependentUpon>
+    <Compile Update="Features\MFACodes\Pages\MFACodesListPage.xaml.cs">
+      <DependentUpon>MFACodesListPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Features\MFACodes\Views\MFACodeItemView.xaml.cs">
       <DependentUpon>MFACodeItemView.xaml</DependentUpon>
@@ -140,7 +137,7 @@
     <MauiXaml Update="Components\OptionTileComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Features\MFACodes\Pages\MFACodesList.xaml">
+    <MauiXaml Update="Features\MFACodes\Pages\MFACodesListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Features\MFACodes\Views\MFACodeItemView.xaml">
