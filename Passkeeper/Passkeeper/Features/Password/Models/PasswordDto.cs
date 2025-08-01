@@ -1,4 +1,3 @@
-using SQLite;
 using System.ComponentModel.DataAnnotations;
 
 namespace Passkeeper.Features.Password.Models;

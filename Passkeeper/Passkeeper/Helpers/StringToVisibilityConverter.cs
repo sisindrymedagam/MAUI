@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using Microsoft.Maui.Controls;
 
 namespace Passkeeper.Helpers
 {
@@ -16,4 +14,4 @@ namespace Passkeeper.Helpers
             throw new NotImplementedException();
         }
     }
-} 
+}

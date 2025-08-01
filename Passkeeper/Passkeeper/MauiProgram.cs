@@ -1,7 +1,7 @@
 ﻿using MetroLog.MicrosoftExtensions;
 using MetroLog.Operators;
-using Passkeeper.Features.Password.Services;
 using Passkeeper.Features.MFACodes.Services;
+using Passkeeper.Features.Password.Services;
 using Plugin.Maui.Biometric;
 
 namespace Passkeeper;

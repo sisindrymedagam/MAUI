@@ -1,6 +1,4 @@
-﻿using Passkeeper.Features.Onboarding.Pages;
-
-namespace Passkeeper
+﻿namespace Passkeeper
 {
     public partial class App : Application
     {

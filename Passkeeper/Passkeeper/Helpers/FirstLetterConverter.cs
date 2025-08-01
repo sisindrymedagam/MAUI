@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using Microsoft.Maui.Controls;
 
 namespace Passkeeper.Helpers
 {
@@ -15,8 +13,8 @@ namespace Passkeeper.Helpers
                 {
                     try
                     {
-                        var uri = new Uri(str);
-                        var host = uri.Host;
+                        Uri uri = new(str);
+                        string host = uri.Host;
                         return host.Length > 0 ? host[0].ToString().ToUpper() : "W";
                     }
                     catch
@@ -34,4 +32,4 @@ namespace Passkeeper.Helpers
             throw new NotImplementedException();
         }
     }
-} 
+}

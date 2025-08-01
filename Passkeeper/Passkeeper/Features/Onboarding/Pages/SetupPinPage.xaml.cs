@@ -1,5 +1,3 @@
-using System.Net.NetworkInformation;
-
 namespace Passkeeper.Features.Onboarding.Pages;
 
 public partial class SetupPinPage : ContentPage

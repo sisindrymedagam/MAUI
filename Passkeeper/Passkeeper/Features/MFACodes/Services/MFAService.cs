@@ -1,4 +1,3 @@
-using SQLite;
 
 namespace Passkeeper.Features.MFACodes.Services;
 

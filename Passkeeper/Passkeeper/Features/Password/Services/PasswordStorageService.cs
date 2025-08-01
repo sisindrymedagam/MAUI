@@ -1,5 +1,3 @@
-using SQLite;
-
 namespace Passkeeper.Features.Password.Services;
 
 public class PasswordStorageService

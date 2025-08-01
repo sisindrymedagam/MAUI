@@ -1,7 +1,4 @@
-using System;
 using System.Globalization;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
 
 namespace Passkeeper.Helpers
 {
@@ -11,7 +8,7 @@ namespace Passkeeper.Helpers
         {
             if (value is bool isExpiringSoon)
             {
-                return isExpiringSoon ? 
+                return isExpiringSoon ?
                     Color.FromArgb("#EF4444") : // Red for expiring soon
                     Color.FromArgb("#10B981");  // Green for normal
             }
@@ -23,4 +20,4 @@ namespace Passkeeper.Helpers
             throw new NotImplementedException();
         }
     }
-} 
+}

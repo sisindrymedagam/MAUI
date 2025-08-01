@@ -80,7 +80,7 @@ public partial class MFACodesListPage : ContentPage
         }
 
         // Create and save the new MFA code
-        var newCode = new MFACodeDto
+        MFACodeDto newCode = new()
         {
             AccountName = name,
             AccountSecret = secret
@@ -100,10 +100,10 @@ public partial class MFACodesListPage : ContentPage
     {
         if (e is MFACodeDto mfaCode)
         {
-            bool confirm = await DisplayAlert("Delete Code", 
-                $"Are you sure you want to delete '{mfaCode.AccountName}'?", 
+            bool confirm = await DisplayAlert("Delete Code",
+                $"Are you sure you want to delete '{mfaCode.AccountName}'?",
                 "Delete", "Cancel");
-            
+
             if (confirm)
             {
                 await _mfaService.DeleteAsync(mfaCode);
