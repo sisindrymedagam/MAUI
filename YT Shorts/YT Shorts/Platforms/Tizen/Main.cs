@@ -2,7 +2,7 @@ using System;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 
-namespace YT_Shorts
+namespace YTShorts
 {
     internal class Program : MauiApplication
     {

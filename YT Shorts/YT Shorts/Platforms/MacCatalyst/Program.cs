@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace YT_Shorts
+namespace YTShorts
 {
     public class Program
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace YT_Shorts
+namespace YTShorts
 {
     public static class MauiProgram
     {

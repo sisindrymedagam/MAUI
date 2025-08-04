@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace YT_Shorts
+namespace YTShorts
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

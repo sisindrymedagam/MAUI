@@ -1,4 +1,4 @@
-﻿namespace YT_Shorts
+﻿namespace YTShorts
 {
     public partial class App : Application
     {

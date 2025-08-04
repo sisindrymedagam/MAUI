@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace YT_Shorts
+namespace YTShorts
 {
     [Application]
     public class MainApplication : MauiApplication
