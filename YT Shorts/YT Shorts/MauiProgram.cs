@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
+using YTShorts.Services;
+using YTShorts.ViewModels;
 
 namespace YTShorts
 {
@@ -9,6 +12,8 @@ namespace YTShorts
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -16,8 +21,14 @@ namespace YTShorts
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+
+            // Register services
+            builder.Services.AddSingleton<HttpClient>();
+            builder.Services.AddSingleton<IVideoService, VideoService>();
+            builder.Services.AddSingleton<ShortsViewModel>();
+            builder.Services.AddSingleton<MainPage>();
 
             return builder.Build();
         }
