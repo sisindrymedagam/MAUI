@@ -29,13 +29,13 @@ public class VideoService : IVideoService
 
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<IEnumerable<VideoItem>>(content)
-                   ?? Enumerable.Empty<VideoItem>();
+                   ?? [];
         }
         catch (Exception ex)
         {
             // Handle errors (log, show alert, etc.)
             Console.WriteLine($"API Error: {ex.Message}");
-            return Enumerable.Empty<VideoItem>();
+            return [];
         }
     }
 }

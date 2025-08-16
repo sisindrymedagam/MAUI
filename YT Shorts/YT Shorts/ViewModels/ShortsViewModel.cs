@@ -1,18 +1,15 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using YTShorts.Models;
 using YTShorts.Services;
 
 namespace YTShorts.ViewModels;
 
-public class ShortsViewModel : INotifyPropertyChanged
+public class ShortsViewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
     private int _currentPosition;
     private ObservableCollection<VideoItem> _videos = new();
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     public ObservableCollection<VideoItem> Videos
     {
@@ -51,14 +48,10 @@ public class ShortsViewModel : INotifyPropertyChanged
     private async void LoadVideos()
     {
         var videos = await _videoService.GetVideosAsync();
+        CurrentPosition = 0;
         Videos = new ObservableCollection<VideoItem>(videos);
     }
 
     public void NextVideo() => CurrentPosition++;
     public void PreviousVideo() => CurrentPosition--;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
