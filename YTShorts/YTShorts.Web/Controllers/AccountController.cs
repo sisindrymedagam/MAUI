@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using YTShorts.Web.Data;
 using YTShorts.Web.Entities;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Controllers;
 
-public class AccountController(ApplicationDbContext context) : Controller
+public class AccountController(ApplicationDbContext context, IConfiguration configuration) : Controller
 {
     public IActionResult Index()
     {
@@ -51,6 +56,44 @@ public class AccountController(ApplicationDbContext context) : Controller
         };
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
         return RedirectToAction("Index", "Shorts");
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Token([FromBody] LoginViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Unauthorized("Email and password are required.");
+        }
+
+        User? user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+        {
+            return Unauthorized("Invalid email or password.");
+        }
+        List<Claim> claims = new()
+        {
+            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new (ClaimTypes.Name, user.Name),
+            new (ClaimTypes.Email, user.Email)
+        };
+        var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: configuration["Jwt:Issuer"],
+            audience: configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddYears(1),
+            signingCredentials: creds);
+
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration = token.ValidTo
+        });
     }
 
     //[HttpGet]

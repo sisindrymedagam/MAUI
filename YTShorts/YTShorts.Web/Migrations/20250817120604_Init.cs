@@ -11,6 +11,22 @@ namespace YTShorts.Web.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DeletedContents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    DeletedContentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DeletedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeletedContents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Shorts",
                 columns: table => new
                 {
@@ -21,9 +37,7 @@ namespace YTShorts.Web.Migrations
                     Size = table.Column<long>(type: "INTEGER", nullable: false),
                     URL = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,6 +72,9 @@ namespace YTShorts.Web.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DeletedContents");
+
             migrationBuilder.DropTable(
                 name: "Shorts");
 

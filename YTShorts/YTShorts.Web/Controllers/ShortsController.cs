@@ -55,8 +55,6 @@ public class ShortsController : Controller
             URL = s.URL,
             CreatedBy = s.CreatedBy,
             CreatedOn = s.CreatedOn,
-            UpdatedBy = s.UpdatedBy,
-            UpdatedOn = s.UpdatedOn
         }).FirstOrDefaultAsync(s => s.Id == id);
 
         return shortDetails == null ? NotFound() : View(shortDetails);
@@ -137,6 +135,14 @@ public class ShortsController : Controller
             await blobClient.DeleteIfExistsAsync();
 
             _context.Shorts.Remove(shorts);
+
+            await _context.DeletedContents.AddAsync(new DeletedContent
+            {
+                DeletedContentId = shorts.Id,
+                DeletedOn = DateTime.UtcNow,
+                DeletedBy = User.Identity?.Name
+            });
+
             await _context.SaveChangesAsync();
         }
         return RedirectToAction(nameof(Index));

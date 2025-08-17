@@ -1,41 +1,39 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 
-namespace YTShorts.Web.Models
+namespace YTShorts.Web.Models;
+
+public class ShortDetailsViewModel : ShortsListViewModel
 {
-    public class ShortDetailsViewModel : ShortsListViewModel
-    {
-        public DateTime CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; }
 
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        public DateTime? UpdatedOn { get; set; }
+    public DateTime? UpdatedOn { get; set; }
 
-        public string? UpdatedBy { get; set; }
-    }
+    public string? UpdatedBy { get; set; }
+}
 
-    public class CreateShortViewModel
-    {
-        [Display(Name = "Video Files")]
-        [Required(ErrorMessage = "Please upload at least one video file.")]
-        public IFormFile[] Files { get; set; } = Array.Empty<IFormFile>();
-    }
+public class CreateShortViewModel
+{
+    [Display(Name = "Video Files")]
+    [Required(ErrorMessage = "Please upload at least one video file.")]
+    public IFormFile[] Files { get; set; } = Array.Empty<IFormFile>();
+}
 
-    public class ShortsListViewModel
-    {
-        public int Id { get; set; }
+public class ShortsListViewModel
+{
+    public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Short Name")]
-        public string Name { get; set; } = string.Empty;
+    [Required]
+    [Display(Name = "Short Name")]
+    public string Name { get; set; } = string.Empty;
 
-        public string? Type { get; set; }
+    public string? Type { get; set; }
 
-        public long? Size { get; set; }
+    public long? Size { get; set; }
 
-        public string? URL { get; set; }
+    public string? URL { get; set; }
 
-        // Returns the size in megabytes (MB), rounded to 1 decimal place, with " MB" appended, or null if Size is null
-        public string? SizeInMB => Size.HasValue ? $"{Math.Round((double)Size.Value / (1024 * 1024), 1)} MB" : null;
-    }
+    // Returns the size in megabytes (MB), rounded to 1 decimal place, with " MB" appended, or null if Size is null
+    public string? SizeInMB => Size.HasValue ? $"{Math.Round((double)Size.Value / (1024 * 1024), 1)} MB" : null;
 }

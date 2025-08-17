@@ -11,7 +11,7 @@ using YTShorts.Web.Data;
 namespace YTShorts.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250817083739_Init")]
+    [Migration("20250817120604_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -19,6 +19,29 @@ namespace YTShorts.Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+
+            modelBuilder.Entity("YTShorts.Web.Entities.DeletedContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DeletedContentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeletedContents");
+                });
 
             modelBuilder.Entity("YTShorts.Web.Entities.Short", b =>
                 {
@@ -45,12 +68,6 @@ namespace YTShorts.Web.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
