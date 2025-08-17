@@ -1,0 +1,65 @@
+@model YTShorts.Web.Models.ShortDetailsViewModel
+@{
+    ViewData["Title"] = "Short Details";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card rounded-4">
+                <div class="card-header bg-white border-0 d-flex align-items-center gap-2" style="min-height: 70px;">
+                    <i class="bi bi-youtube text-danger fs-2"></i>
+                    <h3 class="mb-0 fw-semibold">@Model.Name</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4 text-center">
+                        @if (!string.IsNullOrEmpty(Model.URL))
+                        {
+                            <video class="rounded-3 shadow-sm" style="max-width:100%;height:auto;" controls>
+                                <source src="@Model.URL" type="@Model.Type" />
+                                Your browser does not support the video tag.
+                            </video>
+                        }
+                    </div>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-film text-danger me-2"></i>
+                            <span class="fw-medium">Type:</span> @Model.Type
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-hdd-stack text-primary me-2"></i>
+                            <span class="fw-medium">Size:</span> @Model.SizeInMB
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-link-45deg text-success me-2"></i>
+                            <span class="fw-medium">URL:</span> <a href="@Model.URL" target="_blank">@Model.URL</a>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-calendar-plus text-info me-2"></i>
+                            <span class="fw-medium">Created At:</span> @Model.CreatedOn.ToString("g")
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-calendar-check text-info me-2"></i>
+                            <span class="fw-medium">Updated At:</span> @Model.UpdatedOn?.ToString("g")
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-person-plus text-secondary me-2"></i>
+                            <span class="fw-medium">Created By:</span> @Model.CreatedBy
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-person-gear text-secondary me-2"></i>
+                            <span class="fw-medium">Updated By:</span> @Model.UpdatedBy
+                        </li>
+                    </ul>
+                    <div class="d-flex justify-content-between mt-4">
+                        <form asp-action="Delete" class="mb-0">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" class="btn btn-danger px-4 rounded-pill"><i class="bi bi-trash3 me-1"></i>Delete</button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill"><i class="bi bi-arrow-left me-1"></i>Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

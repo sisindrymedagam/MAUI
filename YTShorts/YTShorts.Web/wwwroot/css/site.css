@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+.form-signin {
+    max-width: 380px;
+    padding: 1rem;
+}

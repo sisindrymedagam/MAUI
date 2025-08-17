@@ -1,146 +1,144 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
+using YTShorts.Web.Entities;
 using YTShorts.Web.Models;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using System.IO;
-// Add Azure Blob Storage namespaces
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Configuration;
 
-namespace YTShorts.Web.Controllers
+namespace YTShorts.Web.Controllers;
+
+[Authorize]
+public class ShortsController : Controller
 {
-    public class ShortsController : Controller
+    private readonly ApplicationDbContext _context;
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly string _containerName;
+    private readonly IConfiguration _configuration;
+    private ILogger<HomeController> _logger;
+
+    public ShortsController(ApplicationDbContext context,
+        BlobServiceClient blobServiceClient,
+        IConfiguration configuration, ILogger<HomeController> logger)
     {
-        private readonly ApplicationDbContext _context;
-        private readonly BlobServiceClient _blobServiceClient;
-        private readonly string _containerName = "shortsvideos";
+        _context = context;
+        _blobServiceClient = blobServiceClient;
+        _configuration = configuration;
+        _logger = logger;
+        _containerName = _configuration["AzureBlobStorage:ContainerName"] ?? "shortsvideos";
+    }
 
-        public ShortsController(ApplicationDbContext context, BlobServiceClient blobServiceClient)
+    // GET: Shorts
+    public async Task<IActionResult> Index()
+    {
+        return View(await _context.Shorts.Select(s => new ShortsListViewModel
         {
-            _context = context;
-            _blobServiceClient = blobServiceClient;
+            Name = s.Name,
+            Id = s.Id,
+            Size = s.Size,
+            Type = s.Type,
+            URL = s.URL
+        }).ToListAsync());
+    }
+
+    // GET: Shorts/Details/5
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+        ShortDetailsViewModel? shortDetails = await _context.Shorts.Select(s => new ShortDetailsViewModel
+        {
+            Id = s.Id,
+            Name = s.Name,
+            Size = s.Size,
+            Type = s.Type,
+            URL = s.URL,
+            CreatedBy = s.CreatedBy,
+            CreatedOn = s.CreatedOn,
+            UpdatedBy = s.UpdatedBy,
+            UpdatedOn = s.UpdatedOn
+        }).FirstOrDefaultAsync(s => s.Id == id);
+
+        return shortDetails == null ? NotFound() : View(shortDetails);
+    }
+
+    // GET: Shorts/Create
+    public IActionResult Create()
+    {
+        return View(new CreateShortViewModel());
+    }
+
+    // POST: Shorts/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateShortViewModel model)
+    {
+        const int maxFiles = 5;
+        const long maxFileSize = 5 * 1024 * 1024; // 5MB
+
+        if (model.Files == null || model.Files.Length == 0)
+        {
+            ModelState.AddModelError("Files", "Please upload at least one video file.");
+        }
+        else if (model.Files.Length > maxFiles)
+        {
+            ModelState.AddModelError("Files", $"You can upload a maximum of {maxFiles} files at once.");
+        }
+        else if (model.Files.Any(f => !f.ContentType.StartsWith("video/")))
+        {
+            ModelState.AddModelError("Files", "Only video files are allowed.");
+        }
+        else if (model.Files.Any(f => f.Length > maxFileSize))
+        {
+            ModelState.AddModelError("Files", $"Each file must be less than or equal to 5 MB.");
         }
 
-        // GET: Shorts
-        public async Task<IActionResult> Index()
+        if (ModelState.IsValid)
         {
-            return View(await _context.Shorts.ToListAsync());
-        }
-
-        // GET: Shorts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-            var shorts = await _context.Shorts.FindAsync(id);
-            if (shorts == null) return NotFound();
-            return View(shorts);
-        }
-
-        // GET: Shorts/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Shorts/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Shorts shorts, IFormFile file)
-        {
-            if (file == null || file.Length == 0)
+            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+            foreach (var file in model.Files)
             {
-                ModelState.AddModelError("file", "Please upload a video file.");
-            }
-            else if (!file.ContentType.StartsWith("video/"))
-            {
-                ModelState.AddModelError("file", "Only video files are allowed.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Upload to Azure Blob Storage
-                var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-                await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
-                var blobName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                var blobClient = containerClient.GetBlobClient(blobName);
-                using (var stream = file.OpenReadStream())
+                string blobName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                BlobClient blobClient = containerClient.GetBlobClient(blobName);
+                using (Stream stream = file.OpenReadStream())
                 {
                     await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = file.ContentType });
                 }
-                shorts.URL = blobClient.Uri.ToString();
-                shorts.Size = file.Length;
-                shorts.Type = file.ContentType;
-                shorts.CreatedOn = DateTime.UtcNow;
-                shorts.CreatedBy = User.Identity?.Name;
+                Short shorts = new()
+                {
+                    Name = Path.GetFileNameWithoutExtension(file.FileName),
+                    URL = blobClient.Uri.ToString(),
+                    Size = file.Length,
+                    Type = file.ContentType,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = User.Identity?.Name
+                };
                 _context.Add(shorts);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(shorts);
-        }
-
-        // GET: Shorts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-            var shorts = await _context.Shorts.FindAsync(id);
-            if (shorts == null) return NotFound();
-            return View(shorts);
-        }
-
-        // POST: Shorts/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,Size,URL,CreatedOn,CreatedBy")] Shorts shorts)
-        {
-            if (id != shorts.Id) return NotFound();
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    shorts.UpdatedOn = DateTime.UtcNow;
-                    shorts.UpdatedBy = User.Identity?.Name;
-                    _context.Update(shorts);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Shorts.Any(e => e.Id == shorts.Id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(shorts);
-        }
-
-        // GET: Shorts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-            var shorts = await _context.Shorts.FindAsync(id);
-            if (shorts == null) return NotFound();
-            return View(shorts);
-        }
-
-        // POST: Shorts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var shorts = await _context.Shorts.FindAsync(id);
-            if (shorts != null)
-            {
-                _context.Shorts.Remove(shorts);
-                await _context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        return View(model);
     }
-} 
+
+    // POST: Shorts/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        Short? shorts = await _context.Shorts.FindAsync(id);
+        if (shorts != null)
+        {
+            var blobUri = new Uri(shorts.URL);
+            string blobName = Path.GetFileName(blobUri.LocalPath);
+            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            await blobClient.DeleteIfExistsAsync();
+
+            _context.Shorts.Remove(shorts);
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+}

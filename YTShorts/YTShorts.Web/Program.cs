@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
 
@@ -7,19 +7,29 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+// Register BlobServiceClient using AzureBlobStorage section
+IConfigurationSection blobConfig = builder.Configuration.GetSection("AzureBlobStorage");
+string blobConnectionString = blobConfig["ConnectionString"] ?? throw new InvalidOperationException("AzureBlobStorage:ConnectionString not found.");
+builder.Services.AddSingleton(new BlobServiceClient(blobConnectionString));
+
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+    });
 
 WebApplication app = builder.Build();
 
 // Apply pending migrations at startup
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     // Apply pending migrations if any exist
     if (db.Database.GetPendingMigrations().Any())
@@ -45,11 +55,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+    pattern: "{controller=Shorts}/{action=Index}/{id?}");
 
 app.Run();
