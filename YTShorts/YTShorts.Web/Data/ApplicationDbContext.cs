@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Data
 {
@@ -9,5 +10,7 @@ namespace YTShorts.Web.Data
             : base(options)
         {
         }
+
+        public DbSet<Shorts> Shorts { get; set; } = null!;
     }
 }
