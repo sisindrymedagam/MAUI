@@ -26,7 +26,7 @@ public class ShortsController : Controller
         _blobServiceClient = blobServiceClient;
         _configuration = configuration;
         _logger = logger;
-        _containerName = _configuration["AzureBlobStorage:ContainerName"] ?? "shortsvideos";
+        _containerName = _configuration["BlobStorage:ContainerName"] ?? "shortsvideos";
     }
 
     // GET: Shorts
