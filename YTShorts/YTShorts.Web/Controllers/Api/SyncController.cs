@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
 using YTShorts.Web.Models;
 
@@ -33,7 +34,7 @@ public class SyncController(ApplicationDbContext context) : ControllerBase
         var syncViewModel = new SyncViewModel<ShortsListViewModel>
         {
             ServerSyncTime = DateTime.UtcNow,
-            Updates = context.Shorts.Where(s => lastSync == null || s.CreatedOn > lastSync)
+            Updates = context.Shorts.Where(s => lastSync == null || s.CreatedOn > lastSync).AsNoTracking()
             .Select(s => new ShortsListViewModel
             {
                 Id = s.Id,

@@ -1,3 +1,4 @@
+﻿@model YTShorts.Web.Models.LoginViewModel
 @{
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
     ViewData["Title"] = "Login";
@@ -6,17 +7,18 @@
 <h2>Login</h2>
 
 <form asp-action="Login" method="post">
-    @Html.AntiForgeryToken()
     <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required />
+        <label asp-for="Email" class="form-label">Email</label>
+        <input class="form-control" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required />
+        <label asp-for="Password" class="form-label">Password</label>
+        <input class="form-control" asp-for="Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="mb-3 text-danger">
-        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     </div>
     <div class="d-grid gap-2">
         <button class="btn btn-primary" type="submit">Login</button>

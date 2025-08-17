@@ -29,16 +29,16 @@ public class AccountController(ApplicationDbContext context, IConfiguration conf
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(string email, string password)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
         ViewData["Title"] = "Login";
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("", "Email and password are required.");
             return View();
         }
-        User? user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+
+        User? user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
         {
             ModelState.AddModelError("", "Invalid email or password.");
             return View();
