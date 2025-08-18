@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
 using YTShorts.Web.Entities;
-using YTShorts.Models;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Controllers;
 
@@ -32,7 +32,7 @@ public class ShortsController : Controller
     // GET: Shorts
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Shorts.Select(s => new ShortsListViewModel
+        return View(await _context.Shorts.Select(s => new ShortsListDto
         {
             Name = s.Name,
             Id = s.Id,

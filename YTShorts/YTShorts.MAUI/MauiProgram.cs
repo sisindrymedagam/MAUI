@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using YTShorts.MAUI.Pages;
+using YTShorts.MAUI.Services;
+using YTShorts.MAUI.ViewModels;
 
 namespace YTShorts.MAUI
 {
@@ -7,7 +10,7 @@ namespace YTShorts.MAUI
     {
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp.CreateBuilder();
+            MauiAppBuilder builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
@@ -19,9 +22,21 @@ namespace YTShorts.MAUI
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<ShortsDatabase>();
 
+            builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<SyncService>();
+
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<ShortsViewModel>();
+            builder.Services.AddTransient<SettingsViewModel>();
+
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<ShortsPage>();
+            builder.Services.AddTransient<SettingsPage>();
             return builder.Build();
         }
     }

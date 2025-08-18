@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YTShorts.MAUI.Pages.LoginPage"
+             Title="LoginPage" 
+             Shell.NavBarIsVisible="False" 
+             Shell.FlyoutItemIsVisible="False" 
+             Shell.TabBarIsVisible="False">
+    <Grid Padding="28" RowDefinitions="Auto,*,Auto" >
+        <VerticalStackLayout Spacing="16" Grid.Row="0">
+            <Label Text="YT Shorts" FontSize="28" TextColor="White" />
+            <Label Text="Sign in to continue" TextColor="#BBB" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Spacing="12" Grid.Row="1" >
+            <Entry Placeholder="Email"
+                   Text="{Binding Email}"
+                   Keyboard="Email"
+                   TextColor="White"
+                   PlaceholderColor="#777"
+                   BackgroundColor="#1a1a1a" />
+            <Entry Placeholder="Password"
+                   Text="{Binding Password}"
+                   IsPassword="True"
+                   TextColor="White"
+                   PlaceholderColor="#777"
+                   BackgroundColor="#1a1a1a" />
+
+            <Button Text="Sign In"
+                    Command="{Binding LoginCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsBusy}" Value="True">
+                        <Setter Property="Text" Value="Signing in..." />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <Label Text="{Binding ErrorMessage}" TextColor="#ff6b6b" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}" />
+            <Label Text="Signed in!" TextColor="#4ade80" IsVisible="{Binding IsSuccess}" />
+        </VerticalStackLayout>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Grid.Row="2" />
+    </Grid>
+</ContentPage>

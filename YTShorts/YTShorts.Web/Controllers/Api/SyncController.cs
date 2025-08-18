@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
-using YTShorts.Models;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Controllers.Api;
 
@@ -20,7 +20,7 @@ public class SyncController(ApplicationDbContext context) : ControllerBase
     /// If null, all records will be returned (initial sync).
     /// </param>
     /// <returns>
-    /// A <see cref="SyncViewModel{ShortsListViewModel}"/> object containing:
+    /// A <see cref="SyncViewModel{ShortsListDto}"/> object containing:
     /// <list type="bullet">
     /// <item><description>ServerSyncTime → the server's current UTC time.</description></item>
     /// <item><description>Updates → list of Shorts created/updated since <paramref name="lastSync"/>.</description></item>
@@ -31,11 +31,11 @@ public class SyncController(ApplicationDbContext context) : ControllerBase
     [HttpGet]
     public IActionResult Index([FromQuery] DateTime? lastSync)
     {
-        var syncViewModel = new SyncViewModel<ShortsListViewModel>
+        var syncViewModel = new SyncViewModel<ShortsListDto>
         {
             ServerSyncTime = DateTime.UtcNow,
             Updates = context.Shorts.Where(s => lastSync == null || s.CreatedOn > lastSync).AsNoTracking()
-            .Select(s => new ShortsListViewModel
+            .Select(s => new ShortsListDto
             {
                 Id = s.Id,
                 Name = s.Name,

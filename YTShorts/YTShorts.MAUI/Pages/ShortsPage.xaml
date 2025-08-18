@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YTShorts.MAUI.Pages.ShortsPage"
+             xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Shorts"
+             Shell.NavBarIsVisible="True" 
+             Shell.FlyoutItemIsVisible="False" 
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <!-- Main vertical swipe list -->
+        <CarouselView x:Name="ShortsCarousel"
+                      ItemsSource="{Binding Shorts}"
+                      IsSwipeEnabled="True"
+                      ItemsLayout="VerticalList"
+                      CurrentItemChanged="ShortsCarousel_CurrentItemChanged">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <!-- Full screen video -->
+                        <ctk:MediaElement x:Name="Player"
+                                          Source="{Binding URL}"
+                                          ShouldAutoPlay="False"
+                                          ShouldLoopPlayback="True"
+                                          ShouldShowPlaybackControls="False"
+                                          Aspect="AspectFill" />
+                        <!-- Overlay text like YT Shorts -->
+                        <Grid Padding="16" RowDefinitions="*,Auto" BackgroundColor="#00000000">
+                            <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name}" 
+                                           TextColor="White" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- Loading / error overlays -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+        <Label Text="{Binding Error}" TextColor="#ff6b6b" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding Error, Converter={StaticResource StringNotEmptyConverter}}" />
+    </Grid>
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem Text="Add Password" Clicked="OnAddTapped" Order="Primary" ToolTipProperties.Text="Add Password" />-->
+        <ToolbarItem Text="Settings" Order="Secondary" Command="{Binding NavigateSettingsCommand}" ToolTipProperties.Text="Settings" />
+    </ContentPage.ToolbarItems>
+</ContentPage>

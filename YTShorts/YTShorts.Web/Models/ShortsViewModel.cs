@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace YTShorts.Models;
+namespace YTShorts.Web.Models;
 
 public class ShortDetailsViewModel : ShortsListDto
 {

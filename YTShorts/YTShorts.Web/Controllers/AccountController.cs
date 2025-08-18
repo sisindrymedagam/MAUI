@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using YTShorts.Web.Data;
 using YTShorts.Web.Entities;
-using YTShorts.Models;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Controllers;
 
@@ -29,7 +29,7 @@ public class AccountController(ApplicationDbContext context, IConfiguration conf
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginDto model)
     {
         ViewData["Title"] = "Login";
         if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ public class AccountController(ApplicationDbContext context, IConfiguration conf
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Token([FromBody] LoginViewModel model)
+    public async Task<IActionResult> Token([FromBody] LoginDto model)
     {
         if (!ModelState.IsValid)
         {

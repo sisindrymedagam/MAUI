@@ -1,10 +1,12 @@
-﻿namespace YTShorts.MAUI
+﻿namespace YTShorts.MAUI;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent(); 
+        Routing.RegisterRoute("//LoginPage", typeof(Pages.LoginPage));
+        Routing.RegisterRoute("//ShortsPage", typeof(Pages.ShortsPage));
+        Routing.RegisterRoute("//SettingsPage", typeof(Pages.SettingsPage));
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using YTShorts.Models;
+using YTShorts.Web.Models;
 
 namespace YTShorts.Web.Controllers;
 

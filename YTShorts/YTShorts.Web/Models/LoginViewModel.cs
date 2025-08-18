@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace YTShorts.Models;
+namespace YTShorts.Web.Models;
 
 public class LoginDto
 {
@@ -11,11 +11,4 @@ public class LoginDto
     [Required(ErrorMessage = "Password is required.", AllowEmptyStrings = false)]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
-}
-
-public class AuthResponse
-{
-    public string Token { get; set; } = default!;
-
-    public DateTime Expiration { get; set; }
 }
