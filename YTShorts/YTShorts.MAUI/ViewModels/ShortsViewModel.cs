@@ -1,24 +1,22 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using YTShorts.MAUI.Services;
 using YTShorts.MAUI.Models;
+using YTShorts.MAUI.Services;
 
 namespace YTShorts.MAUI.ViewModels;
 
-public partial class ShortsViewModel : INotifyPropertyChanged
+public partial class ShortsViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
 
-    public ObservableCollection<ShortsListDto> Shorts { get; } = new();
+    private int _index = 0;
 
-    private bool _isBusy;
-    private string _error = "";
+    [ObservableProperty]
+    private ShortsListDto? currentVideo;
 
-    public bool IsBusy { get => _isBusy; set => Set(ref _isBusy, value); }
-    public string Error { get => _error; set => Set(ref _error, value); }
+    public ObservableCollection<ShortsListDto> Shorts { get; } = [];
 
     public ShortsViewModel(SyncService syncService)
     {
@@ -27,13 +25,8 @@ public partial class ShortsViewModel : INotifyPropertyChanged
 
     public async Task LoadOrSyncAsync()
     {
-        if (IsBusy) return;
-
         try
         {
-            IsBusy = true;
-            Error = "";
-
             var token = Preferences.Get("AuthToken", string.Empty);
             var exp = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
             if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
@@ -48,31 +41,48 @@ public partial class ShortsViewModel : INotifyPropertyChanged
 
             foreach (var s in items)
                 Shorts.Add(s);
+
+            if (Shorts.Count > 0)
+            {
+                _index = 0;
+                CurrentVideo = Shorts[_index];
+            }
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
-            Error = ex.Message;
         }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-    
-    [RelayCommand]
-    private async Task NavigateSettingsAsync()
-    {
-        await Shell.Current.GoToAsync("//SettingsPage");
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void Set<T>(ref T field, T value, [CallerMemberName] string? prop = null)
+    [RelayCommand]
+    private void Next()
     {
-        if (!EqualityComparer<T>.Default.Equals(field, value))
-        {
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+        if (Shorts.Count == 0) return;
+
+        if (_index < Shorts.Count - 1)
+            _index++;
+        else
+            _index = 0;
+
+        CurrentVideo = Shorts[_index];
+    }
+
+    [RelayCommand]
+    private void Previous()
+    {
+        if (Shorts.Count == 0) return;
+
+        if (_index > 0)
+            _index--;
+        else
+            _index = Shorts.Count - 1;
+
+        CurrentVideo = Shorts[_index];
+    }
+
+    [RelayCommand]
+    private static async Task NavigateSettings()
+    {
+        await Shell.Current.GoToAsync("//SettingsPage");
     }
 }
