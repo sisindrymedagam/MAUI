@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTShorts.Web", "YTShorts.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTShorts.MAUI", "YTShorts.MAUI\YTShorts.MAUI.csproj", "{7453F54B-A7DE-4305-A979-027C6DB675D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YTShorts.Models", "YTShorts.Models\YTShorts.Models.csproj", "{6B728D78-73A7-46D7-9CC7-30D448147299}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{7453F54B-A7DE-4305-A979-027C6DB675D1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{7453F54B-A7DE-4305-A979-027C6DB675D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7453F54B-A7DE-4305-A979-027C6DB675D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B728D78-73A7-46D7-9CC7-30D448147299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B728D78-73A7-46D7-9CC7-30D448147299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B728D78-73A7-46D7-9CC7-30D448147299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B728D78-73A7-46D7-9CC7-30D448147299}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

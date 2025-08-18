@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YTShorts.Web.Data;
-using YTShorts.Web.Models;
+using YTShorts.Models;
 
 namespace YTShorts.Web.Controllers.Api;
 

@@ -26,4 +26,8 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YTShorts.Models\YTShorts.Models.csproj" />
+  </ItemGroup>
+
 </Project>

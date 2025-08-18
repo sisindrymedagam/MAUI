@@ -1,4 +1,4 @@
-namespace YTShorts.Web.Models
+namespace YTShorts.Models
 {
     public class ErrorViewModel
     {

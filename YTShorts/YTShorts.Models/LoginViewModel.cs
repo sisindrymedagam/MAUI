@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace YTShorts.Web.Models;
+namespace YTShorts.Models;
 
 public class LoginViewModel
 {
