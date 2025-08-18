@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using MauiIcons.Fluent;
 using Microsoft.Extensions.Logging;
 using YTShorts.MAUI.Pages;
 using YTShorts.MAUI.Services;
@@ -15,6 +16,7 @@ namespace YTShorts.MAUI
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMediaElement()
+                .UseFluentMauiIcons()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

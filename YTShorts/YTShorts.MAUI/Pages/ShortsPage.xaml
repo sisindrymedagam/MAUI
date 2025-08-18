@@ -4,20 +4,54 @@
              x:Class="YTShorts.MAUI.Pages.ShortsPage"
              xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Shorts"
+             xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              Shell.NavBarIsVisible="False" 
              Shell.FlyoutItemIsVisible="False" 
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False" BackgroundColor="Black">
 
-    <Grid>
-        <!-- Full screen video -->
-        <ctk:MediaElement x:Name="Player"
+    <Grid BackgroundColor="Black" x:Name="RootGrid">
+        <Grid VerticalOptions="Center"
+          HorizontalOptions="Center"
+              HeightRequest="{Binding Source={x:Reference RootGrid}, Path=Height}"
+          WidthRequest="{Binding Source={x:Reference RootGrid}, Path=Height, Converter={StaticResource AspectRatioConverter}, ConverterParameter=9:16}">
+            <!-- Full screen video -->
+            <ctk:MediaElement x:Name="Player"
                           Source="{Binding CurrentVideo.URL}"
                           ShouldAutoPlay="True"
                           ShouldLoopPlayback="True"
                           ShouldShowPlaybackControls="False"
                           Aspect="AspectFill"
-                          VerticalOptions="FillAndExpand"
-                          HorizontalOptions="FillAndExpand" />
+                          VerticalOptions="Fill"
+                          HorizontalOptions="Fill" />
+        </Grid>
+
+        <!-- Custom transparent toolbar overlay -->
+        <Grid VerticalOptions="Start"
+              BackgroundColor="#66000000"
+            Padding="10"
+              HeightRequest="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Title -->
+            <Label Text="Shorts"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   VerticalOptions="Center" />
+
+            <!-- Settings button -->
+            <ImageButton Grid.Column="1"
+                         Source="{icon:Fluent Icon=Settings16, IconSize=16, IconColor={AppThemeBinding Light=#FFFFFF, Dark=#FFFFFF }}"
+                         BackgroundColor="Transparent"
+                         Command="{Binding NavigateSettingsCommand}"
+                         WidthRequest="16"
+                         HeightRequest="16"
+                         VerticalOptions="Center"
+                         HorizontalOptions="End"/>
+        </Grid>
 
         <!-- Overlay bottom details -->
         <Grid VerticalOptions="End"
@@ -40,6 +74,7 @@
                 <Label Text="{Binding CurrentVideo.Name}"
                        TextColor="White"
                        FontSize="14"
+                       Padding="10"
                        FontAttributes="Bold"
                        LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
@@ -51,8 +86,10 @@
         </Grid.GestureRecognizers>
     </Grid>
 
-    <ContentPage.ToolbarItems>
-        <!--<ToolbarItem Text="Add Password" Clicked="OnAddTapped" Order="Primary" ToolTipProperties.Text="Add Password" />-->
+    <!--<ContentPage.ToolbarItems>
+        -->
+    <!--<ToolbarItem Text="Add Password" Clicked="OnAddTapped" Order="Primary" ToolTipProperties.Text="Add Password" />-->
+    <!--
         <ToolbarItem Text="Settings" Order="Secondary" Command="{Binding NavigateSettingsCommand}" ToolTipProperties.Text="Settings" />
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>-->
 </ContentPage>

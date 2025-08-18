@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <conv:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <conv:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
+            <conv:AspectRatioConverter x:Key="AspectRatioConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
