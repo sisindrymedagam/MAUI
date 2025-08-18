@@ -1,5 +1,4 @@
-﻿using Android.Content;
-using SQLite;
+﻿using SQLite;
 using YTShorts.MAUI.Models;
 
 namespace YTShorts.MAUI.Services;
