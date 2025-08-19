@@ -41,4 +41,10 @@ public class SyncService
             return await _db.GetShortsAsync();
         }
     }
+
+    public async Task<List<ShortsListDto>> LoadFromDbAsync()
+    {
+        return await _db.GetShortsAsync();
+    }
+
 }

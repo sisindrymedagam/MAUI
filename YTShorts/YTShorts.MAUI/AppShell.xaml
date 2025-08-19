@@ -5,18 +5,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:YTShorts.MAUI.Pages"
     xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
-    Title="YTShorts.MAUI">
+    Title="YT Shorts">
     <FlyoutItem Title="Passkeeper" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent Title="Login"
-        Route="LoginPage"
-        ContentTemplate="{DataTemplate pages:LoginPage}" />
+        <ShellContent 
+            Title="Login"
+            Route="LoginPage"
+            ContentTemplate="{DataTemplate pages:LoginPage}" />
 
-        <ShellContent Title="Shorts"
-        Route="ShortsPage"
-        ContentTemplate="{DataTemplate pages:ShortsPage}" />
+        <ShellContent 
+            Title="Shorts"
+            Route="ShortsPage"
+            ContentTemplate="{DataTemplate pages:ShortsPage}" />
 
-        <ShellContent Title="Settings"
-        Route="SettingsPage"
-                  ContentTemplate="{DataTemplate pages:SettingsPage}" />
+        <ShellContent 
+            Title="Settings"
+            Route="SettingsPage"
+            ContentTemplate="{DataTemplate pages:SettingsPage}" />
     </FlyoutItem>
 </Shell>

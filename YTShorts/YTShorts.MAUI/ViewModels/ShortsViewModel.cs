@@ -12,6 +12,9 @@ public partial class ShortsViewModel : ObservableObject
     private readonly SyncService _syncService;
 
     private int _index = 0;
+    
+    [ObservableProperty]
+    private string playPosition = string.Empty; // <-- NEW
 
     [ObservableProperty]
     private ShortsListDto? currentVideo;
@@ -31,29 +34,44 @@ public partial class ShortsViewModel : ObservableObject
             var exp = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
             if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
             {
-                await Shell.Current.GoToAsync("//LoginPage");
+                await Shell.Current.GoToAsync("LoginPage");
                 return;
             }
 
-            var items = await _syncService.SyncAsync(token);
-
-            Shorts.Clear();
-
-            foreach (var s in items)
-                Shorts.Add(s);
-
-            if (Shorts.Count > 0)
+            var items = await _syncService.LoadFromDbAsync();
+            LoadList(items);
+            // 2. Background sync with API
+            _ = Task.Run(async () =>
             {
-                _index = 0;
-                CurrentVideo = Shorts[_index];
-            }
+                var apiItems = await _syncService.SyncAsync(token);
+
+                if (apiItems.Any())
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        LoadList(apiItems); // refresh UI
+                    });
+                }
+            });
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
         }
     }
+    private void LoadList(List<ShortsListDto> items)
+    {
+        Shorts.Clear();
+        foreach (var s in items)
+            Shorts.Add(s);
 
+        if (Shorts.Count > 0)
+        {
+            _index = 0;
+            CurrentVideo = Shorts[_index];
+            UpdatePlayPosition();
+        }
+    }
     [RelayCommand]
     private void Next()
     {
@@ -65,6 +83,7 @@ public partial class ShortsViewModel : ObservableObject
             _index = 0;
 
         CurrentVideo = Shorts[_index];
+        UpdatePlayPosition();
     }
 
     [RelayCommand]
@@ -78,11 +97,17 @@ public partial class ShortsViewModel : ObservableObject
             _index = Shorts.Count - 1;
 
         CurrentVideo = Shorts[_index];
+        UpdatePlayPosition();
     }
 
     [RelayCommand]
     private static async Task NavigateSettings()
     {
         await Shell.Current.GoToAsync("//SettingsPage");
+    }
+
+    private void UpdatePlayPosition()
+    {
+        PlayPosition = $"{_index + 1}/{Shorts.Count}";
     }
 }

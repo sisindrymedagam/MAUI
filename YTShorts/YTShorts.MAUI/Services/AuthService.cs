@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using YTShorts.MAUI.Models;
+﻿using YTShorts.MAUI.Models;
 
 namespace YTShorts.MAUI.Services;
 
@@ -14,6 +13,15 @@ public class AuthService
         _db = db;
     }
 
+    public static bool IsLogedIn()
+    {
+        var token = Preferences.Get("AuthToken", string.Empty);
+        var expiration = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
+
+        var needsLogin = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
+        return needsLogin;
+    }
+
     public Task<AuthResponse> LoginAsync(string email, string password)
     {
         var url = "https://ytshort.azurewebsites.net/account/token";
@@ -23,6 +31,6 @@ public class AuthService
     public async Task Logout()
     {
         Preferences.Clear();
-       await _db.DeleteAllShortsAsync();
+        await _db.DeleteAllShortsAsync();
     }
 }

@@ -23,13 +23,36 @@
                           Aspect="AspectFill"
                           VerticalOptions="Fill"
                           HorizontalOptions="Fill" />
+
+            <!-- Center play icon (shown only when paused) -->
+            <Image x:Name="PlayOverlay"
+                   Source="{icon:Fluent Icon=PlayCircle48, IconSize=64, IconColor=#FFFFFF}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Opacity="0"
+                   IsVisible="False">
+                <Image.Shadow>
+                    <Shadow Brush="Black"
+    Offset="2,2"
+    Radius="8"
+    Opacity="0.8" />
+                </Image.Shadow>
+            </Image>
         </Grid>
 
         <!-- Custom transparent toolbar overlay -->
         <Grid VerticalOptions="Start"
-              BackgroundColor="#66000000"
-            Padding="10"
-              HeightRequest="50">
+      HeightRequest="56"
+      Padding="10,0"
+      BackgroundColor="Transparent">
+
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#66000000" Offset="0.0" />
+                    <GradientStop Color="Transparent" Offset="1.0" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -37,20 +60,23 @@
 
             <!-- Title -->
             <Label Text="Shorts"
-                   TextColor="White"
-                   FontAttributes="Bold"
-                   FontSize="18"
-                   VerticalOptions="Center" />
+           Grid.Column="0"
+           TextColor="White"
+           FontAttributes="Bold"
+           FontSize="18"
+           VerticalOptions="Center"
+           HorizontalOptions="Start"/>
 
             <!-- Settings button -->
             <ImageButton Grid.Column="1"
-                         Source="{icon:Fluent Icon=Settings16, IconSize=16, IconColor={AppThemeBinding Light=#FFFFFF, Dark=#FFFFFF }}"
-                         BackgroundColor="Transparent"
-                         Command="{Binding NavigateSettingsCommand}"
-                         WidthRequest="16"
-                         HeightRequest="16"
-                         VerticalOptions="Center"
-                         HorizontalOptions="End"/>
+                 Source="{icon:Fluent Icon=Settings20, IconSize=20, IconColor=#FFFFFF}"
+                 BackgroundColor="Transparent"
+                 Command="{Binding NavigateSettingsCommand}"
+                 WidthRequest="36"
+                 HeightRequest="36"
+                 Padding="8"
+                 VerticalOptions="Center"
+                 HorizontalOptions="End"/>
         </Grid>
 
         <!-- Overlay bottom details -->
@@ -70,11 +96,16 @@
             </BoxView>
 
             <!-- Text overlay -->
-            <VerticalStackLayout VerticalOptions="End" Padding="10">
+            <VerticalStackLayout VerticalOptions="End" Padding="10" Spacing="4">
+                <Label Text="{Binding PlayPosition}"
+               TextColor="White"
+               FontSize="12"
+               FontAttributes="Bold"
+               HorizontalOptions="Start" />
                 <Label Text="{Binding CurrentVideo.Name}"
                        TextColor="White"
                        FontSize="14"
-                       Padding="10"
+                       Padding="0,0,0,5"
                        FontAttributes="Bold"
                        LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
@@ -83,13 +114,8 @@
         <Grid.GestureRecognizers>
             <SwipeGestureRecognizer Direction="Up" Command="{Binding NextCommand}" />
             <SwipeGestureRecognizer Direction="Down" Command="{Binding PreviousCommand}" />
+            <TapGestureRecognizer Tapped="OnVideoTapped" />
         </Grid.GestureRecognizers>
     </Grid>
 
-    <!--<ContentPage.ToolbarItems>
-        -->
-    <!--<ToolbarItem Text="Add Password" Clicked="OnAddTapped" Order="Primary" ToolTipProperties.Text="Add Password" />-->
-    <!--
-        <ToolbarItem Text="Settings" Order="Secondary" Command="{Binding NavigateSettingsCommand}" ToolTipProperties.Text="Settings" />
-    </ContentPage.ToolbarItems>-->
 </ContentPage>

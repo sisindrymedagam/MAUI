@@ -30,6 +30,12 @@ public class LoginViewModel : INotifyPropertyChanged
 
     public ICommand LoginCommand { get; }
 
+    public async Task CheckLogin()
+    {
+        if (AuthService.IsLogedIn())
+            await Shell.Current.GoToAsync("//ShortsPage");
+    }
+
     private async Task LoginAsync()
     {
         if (IsBusy) return;
