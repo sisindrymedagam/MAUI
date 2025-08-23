@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Looply.MAUI.Handlers;
 using Looply.MAUI.Services;
 
 namespace Looply.MAUI.ViewModels;
@@ -58,7 +59,7 @@ public class LoginViewModel : INotifyPropertyChanged
 
             IsSuccess = true;
 
-            await Shell.Current.Navigation.PushAsync(new MainPage(serviceProvider));
+            await NavigationHandler.NavigateToAsync(new MainPage(serviceProvider));
         }
         catch (Exception ex)
         {

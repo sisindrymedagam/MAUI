@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Looply.MAUI.Handlers;
 using Looply.MAUI.Pages;
 using Looply.MAUI.Services;
 
@@ -44,7 +45,7 @@ public partial class SettingsViewModel : ObservableObject
         var exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
         if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
         {
-            await Shell.Current.Navigation.PushAsync(new LoginPage(serviceProvider));
+            await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
             return;
         }
 
@@ -64,6 +65,6 @@ public partial class SettingsViewModel : ObservableObject
         if (!confirm) return;
 
         await _authService.Logout();
-        await Shell.Current.Navigation.PushAsync(new LoginPage(serviceProvider));
+        await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
     }
 }

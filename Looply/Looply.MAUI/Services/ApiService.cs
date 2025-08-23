@@ -1,4 +1,5 @@
-﻿using Looply.MAUI.Pages;
+﻿using Looply.MAUI.Handlers;
+using Looply.MAUI.Pages;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -36,7 +37,7 @@ public class ApiService
 
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await Shell.Current.Navigation.PushAsync(new LoginPage(serviceProvider));
+                await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
             });
         }
     }

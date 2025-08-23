@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Looply.MAUI.Models;
 using Looply.MAUI.Services;
 using Looply.MAUI.Pages;
+using Looply.MAUI.Handlers;
 
 namespace Looply.MAUI.ViewModels;
 
@@ -102,7 +103,7 @@ public partial class ShortsViewModel : ObservableObject
     [RelayCommand]
     private async Task NavigateSettings()
     {
-        await Shell.Current.Navigation.PushAsync(new SettingsPage(serviceProvider));
+        await NavigationHandler.NavigateToAsync(new SettingsPage(serviceProvider));
     }
 
     private void UpdatePlayPosition()
