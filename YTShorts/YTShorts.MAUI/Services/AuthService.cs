@@ -15,11 +15,11 @@ public class AuthService
 
     public static bool IsLogedIn()
     {
-        var token = Preferences.Get("AuthToken", string.Empty);
-        var expiration = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
+        var token = Preferences.Get(Constants.TokenName, string.Empty);
+        var expiration = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
 
-        var needsLogin = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
-        return needsLogin;
+        var isInValid = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
+        return !isInValid;
     }
 
     public Task<AuthResponse> LoginAsync(string email, string password)

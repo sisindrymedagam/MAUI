@@ -26,7 +26,7 @@
 
             <!-- Center play icon (shown only when paused) -->
             <Image x:Name="PlayOverlay"
-                   Source="{icon:Fluent Icon=PlayCircle48, IconSize=64, IconColor=#FFFFFF}"
+                   Source="{icon:Fluent Icon=PlayCircle24, IconSize=64, IconColor=#FFFFFF}"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
                    Opacity="0"

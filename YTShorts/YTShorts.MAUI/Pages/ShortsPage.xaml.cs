@@ -1,3 +1,4 @@
+using YTShorts.MAUI.Services;
 using YTShorts.MAUI.ViewModels;
 
 namespace YTShorts.MAUI.Pages;
@@ -15,6 +16,12 @@ public partial class ShortsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        if (!AuthService.IsLogedIn())
+        {
+            await Shell.Current.GoToAsync("//LoginPage");
+        }
+
         if (Player != null && Player.Source != null)
         {
             Player.Play();

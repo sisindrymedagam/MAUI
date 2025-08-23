@@ -26,16 +26,16 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task LoadInfo()
     {
-        UserEmail = Preferences.Get("UserEmail", "");
-        LastSyncTime = Preferences.Get("LastSyncUtc", Constants.MinDateTime);
+        UserEmail = Preferences.Get(Constants.UserEmailName, "");
+        LastSyncTime = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
         VideoCount = await _db.GetShortsCountAsync();
     }
 
     [RelayCommand]
     private async Task ForceSyncAsync()
     {
-        var token = Preferences.Get("AuthToken", string.Empty);
-        var exp = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
+        var token = Preferences.Get(Constants.TokenName, string.Empty);
+        var exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
         if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
         {
             await Shell.Current.GoToAsync("//LoginPage");

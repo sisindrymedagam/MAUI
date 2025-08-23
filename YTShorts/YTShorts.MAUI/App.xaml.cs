@@ -1,4 +1,6 @@
-﻿namespace YTShorts.MAUI;
+﻿using YTShorts.MAUI.Services;
+
+namespace YTShorts.MAUI;
 
 public partial class App : Application
 {
@@ -25,11 +27,11 @@ public partial class App : Application
 
     private static void RouteBasedOnToken()
     {
-        var token = Preferences.Get("AuthToken", string.Empty);
-        var expiration = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
+        var token = Preferences.Get(Constants.TokenName, string.Empty);
+        var expiration = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
 
         var needsLogin = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
-        var targetRoute = needsLogin ? "//LoginPage" : "//ShortsPage";
+        var targetRoute = AuthService.IsLogedIn() ? "//ShortsPage" : "//LoginPage";
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {

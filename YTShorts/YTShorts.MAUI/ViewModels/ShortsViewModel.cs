@@ -12,7 +12,7 @@ public partial class ShortsViewModel : ObservableObject
     private readonly SyncService _syncService;
 
     private int _index = 0;
-    
+
     [ObservableProperty]
     private string playPosition = string.Empty; // <-- NEW
 
@@ -30,8 +30,8 @@ public partial class ShortsViewModel : ObservableObject
     {
         try
         {
-            var token = Preferences.Get("AuthToken", string.Empty);
-            var exp = Preferences.Get("AuthTokenExpiration", DateTime.MinValue);
+            var token = Preferences.Get(Constants.TokenName, string.Empty);
+            var exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
             if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
             {
                 await Shell.Current.GoToAsync("LoginPage");

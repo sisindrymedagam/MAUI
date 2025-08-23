@@ -14,6 +14,11 @@ public static class Constants
         // enable multi-threaded database access
         SQLite.SQLiteOpenFlags.SharedCache;
 
-    public static string DatabasePath =>
-        Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+    public static string DatabasePath => Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+
+    public const string TokenName = "AuthToken";
+    public const string TokenExpirationName = "AuthTokenExpiration";
+
+    public const string UserEmailName = "UserEmail";
+    public const string LastSyncUtcName = "LastSyncUtc";
 }

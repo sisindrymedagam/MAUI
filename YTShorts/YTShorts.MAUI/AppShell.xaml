@@ -10,7 +10,7 @@
         <ShellContent 
             Title="Login"
             Route="LoginPage"
-            ContentTemplate="{DataTemplate pages:LoginPage}" />
+            ContentTemplate="{DataTemplate pages:LoginPage}" IsVisible="False" />
 
         <ShellContent 
             Title="Shorts"
@@ -20,6 +20,6 @@
         <ShellContent 
             Title="Settings"
             Route="SettingsPage"
-            ContentTemplate="{DataTemplate pages:SettingsPage}" />
+            ContentTemplate="{DataTemplate pages:SettingsPage}" IsVisible="False" />
     </FlyoutItem>
 </Shell>

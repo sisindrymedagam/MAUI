@@ -16,7 +16,7 @@ public class SyncService
     {
         try
         {
-            var lastSync = Preferences.Get("LastSyncUtc", Constants.MinDateTime);
+            var lastSync = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
 
             if (force) lastSync = Constants.MinDateTime;
 
@@ -32,7 +32,7 @@ public class SyncService
                 await _db.DeleteShortsAsync(result.Deletes);
 
             // Update sync timestamp
-            Preferences.Set("LastSyncUtc", result.ServerSyncTime);
+            Preferences.Set(Constants.LastSyncUtcName, result.ServerSyncTime);
 
             return await _db.GetShortsAsync();
         }

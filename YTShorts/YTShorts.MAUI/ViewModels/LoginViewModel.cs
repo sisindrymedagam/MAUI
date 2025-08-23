@@ -55,10 +55,10 @@ public class LoginViewModel : INotifyPropertyChanged
             if (string.IsNullOrWhiteSpace(resp.Token))
                 throw new InvalidOperationException("Invalid token received.");
 
-            Preferences.Set("AuthToken", resp.Token);
-            Preferences.Set("AuthTokenExpiration", resp.Expiration.ToUniversalTime());
-            Preferences.Set("LastSyncUtc", Constants.MinDateTime);
-            Preferences.Set("UserEmail", Email);
+            Preferences.Set(Constants.TokenName, resp.Token);
+            Preferences.Set(Constants.TokenExpirationName, resp.Expiration.ToUniversalTime());
+            Preferences.Set(Constants.LastSyncUtcName, Constants.MinDateTime);
+            Preferences.Set(Constants.UserEmailName, Email);
 
             IsSuccess = true;
 
