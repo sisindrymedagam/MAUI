@@ -1,24 +1,56 @@
-﻿namespace Looply.MAUI
+﻿using Looply.MAUI.ViewModels;
+
+namespace Looply.MAUI;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    private ShortsViewModel? VM => BindingContext as ShortsViewModel;
+    private bool _isPaused = false;
+    public MainPage(IServiceProvider serviceProvider)
     {
-        int count = 0;
+        InitializeComponent();
+        BindingContext = serviceProvider.GetService<ShortsViewModel>();
+    }
 
-        public MainPage()
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (Player != null && Player.Source != null)
         {
-            InitializeComponent();
+            Player.Play();
         }
-
-        private void OnCounterClicked(object? sender, EventArgs e)
+        else
         {
-            count++;
+            if (VM is not null)
+                await VM.LoadOrSyncAsync();
+        }
+    }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        Player?.Pause();
+    }
+
+    private void OnVideoTapped(object sender, TappedEventArgs e)
+    {
+        if (_isPaused)
+        {
+            Player.Play();
+            PlayOverlay.IsVisible = false;
+            PlayOverlay.Opacity = 0;
+            _isPaused = false;
+        }
+        else
+        {
+            Player.Pause();
+            PlayOverlay.IsVisible = true;
+
+            // Fade animation for overlay
+            PlayOverlay.FadeTo(1, 250, Easing.CubicIn);
+            _isPaused = true;
         }
     }
 }
