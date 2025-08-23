@@ -1,0 +1,9 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Http
+
+<span class="navbar-text me-2">Hello, @User.Identity.Name!</span>
+<form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-link nav-link" style="display:inline;">Logout</button>
+</form>
