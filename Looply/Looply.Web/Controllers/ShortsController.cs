@@ -1,11 +1,11 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Looply.Web.Data;
 using Looply.Web.Entities;
 using Looply.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Looply.Web.Controllers;
 
@@ -16,7 +16,7 @@ public class ShortsController : Controller
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string _containerName;
     private readonly IConfiguration _configuration;
-    private ILogger<HomeController> _logger;
+    private readonly ILogger<HomeController> _logger;
 
     public ShortsController(ApplicationDbContext context,
         BlobServiceClient blobServiceClient,
@@ -95,7 +95,7 @@ public class ShortsController : Controller
         {
             BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
             await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
-            foreach (var file in model.Files)
+            foreach (IFormFile file in model.Files)
             {
                 string blobName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                 BlobClient blobClient = containerClient.GetBlobClient(blobName);
@@ -128,7 +128,7 @@ public class ShortsController : Controller
         Short? shorts = await _context.Shorts.FindAsync(id);
         if (shorts != null)
         {
-            var blobUri = new Uri(shorts.URL);
+            Uri blobUri = new(shorts.URL);
             string blobName = Path.GetFileName(blobUri.LocalPath);
             BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
             BlobClient blobClient = containerClient.GetBlobClient(blobName);

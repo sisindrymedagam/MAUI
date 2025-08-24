@@ -1,18 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Looply.MAUI.Models;
 using Looply.MAUI.Services;
-using Looply.MAUI.Pages;
-using Looply.MAUI.Handlers;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Looply.MAUI.ViewModels;
 
 public partial class ShortsViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
-    readonly IServiceProvider serviceProvider;
+    private readonly IServiceProvider serviceProvider;
 
     private int _index = 0;
 
@@ -34,16 +32,16 @@ public partial class ShortsViewModel : ObservableObject
     {
         try
         {
-            var token = Preferences.Get(Constants.TokenName, string.Empty);
+            string token = Preferences.Get(Constants.TokenName, string.Empty);
 
-            var items = await _syncService.LoadFromDbAsync();
+            List<ShortsListDto> items = await _syncService.LoadFromDbAsync();
 
             LoadList(items);
-            
+
             // 2. Background sync with API
             _ = Task.Run(async () =>
             {
-                var apiItems = await _syncService.SyncAsync(token);
+                List<ShortsListDto> apiItems = await _syncService.SyncAsync(token);
 
                 if (apiItems.Any())
                 {
@@ -62,7 +60,7 @@ public partial class ShortsViewModel : ObservableObject
     private void LoadList(List<ShortsListDto> items)
     {
         Shorts.Clear();
-        foreach (var s in items)
+        foreach (ShortsListDto s in items)
             Shorts.Add(s);
 
         if (Shorts.Count > 0)

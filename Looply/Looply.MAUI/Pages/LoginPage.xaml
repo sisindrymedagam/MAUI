@@ -9,8 +9,8 @@
              NavigationPage.HasNavigationBar="False">
     <Grid Padding="28" RowDefinitions="Auto,*,Auto" >
         <VerticalStackLayout Spacing="16" Grid.Row="0">
-            <Label Text="Looply Shorts" FontSize="28" TextColor="Black" />
-            <Label Text="Sign in to continue" TextColor="Black" />
+            <Label Text="Looply Shorts" FontSize="28" />
+            <Label Text="Sign in to continue" />
         </VerticalStackLayout>
 
         <VerticalStackLayout Spacing="16" Grid.Row="1" >

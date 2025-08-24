@@ -3,7 +3,6 @@ using Looply.MAUI.Pages;
 using Looply.MAUI.Services;
 using Looply.MAUI.ViewModels;
 using MauiIcons.Fluent;
-using Microsoft.Extensions.Logging;
 
 namespace Looply.MAUI
 {

@@ -7,7 +7,7 @@ public partial class MainPage : ContentPage
 {
     private ShortsViewModel? VM => BindingContext as ShortsViewModel;
     private bool _isPaused = false;
-    IServiceProvider ServiceProvider;
+    private readonly IServiceProvider ServiceProvider;
     public MainPage(IServiceProvider serviceProvider)
     {
         InitializeComponent();

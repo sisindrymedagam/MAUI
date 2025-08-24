@@ -5,11 +5,15 @@ namespace Looply.MAUI;
 
 public partial class App : Application
 {
-    readonly IServiceProvider serviceProvider;
+    private readonly IServiceProvider serviceProvider;
 
     public App(IServiceProvider _serviceProvider)
     {
         serviceProvider = _serviceProvider;
+        if (Current != null)
+        {
+            Current.UserAppTheme = AppTheme.Dark;
+        }
         InitializeComponent();
     }
 
@@ -17,7 +21,7 @@ public partial class App : Application
     {
         if (AuthService.IsLogedIn())
         {
-            var window = new Window(new NavigationPage(new MainPage(serviceProvider)));
+            Window window = new(new NavigationPage(new MainPage(serviceProvider)));
             window.Destroying += (s, e) => App.StopVideoIfPlaying();
             window.Deactivated += (s, e) => App.StopVideoIfPlaying();
             return window;
@@ -32,7 +36,7 @@ public partial class App : Application
     {
         if (Current.MainPage is NavigationPage navigationPage)
         {
-            var shortsPage = navigationPage.CurrentPage as MainPage;
+            MainPage? shortsPage = navigationPage.CurrentPage as MainPage;
             shortsPage?.StopVideo();
         }
     }

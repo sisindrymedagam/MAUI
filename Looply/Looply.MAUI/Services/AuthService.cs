@@ -15,16 +15,16 @@ public class AuthService
 
     public static bool IsLogedIn()
     {
-        var token = Preferences.Get(Constants.TokenName, string.Empty);
-        var expiration = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
+        string token = Preferences.Get(Constants.TokenName, string.Empty);
+        DateTime expiration = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
 
-        var isInValid = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
+        bool isInValid = string.IsNullOrWhiteSpace(token) || expiration <= DateTime.UtcNow;
         return !isInValid;
     }
 
     public Task<AuthResponse> LoginAsync(string email, string password)
     {
-        var url = "https://ytshort.azurewebsites.net/account/token";
+        string url = "https://ytshort.azurewebsites.net/account/token";
         return _api.PostAsync<AuthResponse>(url, new { Email = email, Password = password });
     }
 

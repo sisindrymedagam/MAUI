@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Looply.Web.Data;
+using Looply.Web.Entities;
+using Looply.Web.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Looply.Web.Data;
-using Looply.Web.Entities;
-using Looply.Web.Models;
 
 namespace Looply.Web.Controllers;
 
@@ -43,12 +43,12 @@ public class AccountController(ApplicationDbContext context, IConfiguration conf
             ModelState.AddModelError("", "Invalid email or password.");
             return View();
         }
-        List<Claim> claims = new()
-        {
+        List<Claim> claims =
+        [
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new (ClaimTypes.Name, user.Name),
             new (ClaimTypes.Email, user.Email)
-        };
+        ];
         ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         AuthenticationProperties authProperties = new()
         {
@@ -72,17 +72,17 @@ public class AccountController(ApplicationDbContext context, IConfiguration conf
         {
             return Unauthorized("Invalid email or password.");
         }
-        List<Claim> claims = new()
-        {
+        List<Claim> claims =
+        [
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new (ClaimTypes.Name, user.Name),
             new (ClaimTypes.Email, user.Email)
-        };
-        var key = new SymmetricSecurityKey(
+        ];
+        SymmetricSecurityKey key = new(
                 Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
+        JwtSecurityToken token = new(
             issuer: configuration["Jwt:Issuer"],
             audience: configuration["Jwt:Audience"],
             claims: claims,

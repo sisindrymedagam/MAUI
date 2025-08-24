@@ -16,12 +16,12 @@ public class SyncService
     {
         try
         {
-            var lastSync = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
+            DateTime lastSync = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
 
             if (force) lastSync = Constants.MinDateTime;
 
-            var url = $"https://ytshort.azurewebsites.net/api/sync?lastSync={Uri.EscapeDataString(lastSync.ToString("O"))}";
-            var result = await _api.GetAsync<SyncViewModel<ShortsListDto>>(url, token);
+            string url = $"https://ytshort.azurewebsites.net/api/sync?lastSync={Uri.EscapeDataString(lastSync.ToString("O"))}";
+            SyncViewModel<ShortsListDto> result = await _api.GetAsync<SyncViewModel<ShortsListDto>>(url, token);
 
             // Apply updates
             if (result.Updates?.Count > 0)

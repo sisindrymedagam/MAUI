@@ -9,7 +9,7 @@ public class AspectRatioConverter : IValueConverter
     {
         if (value is double height && parameter is string ratio)
         {
-            var parts = ratio.Split(':');
+            string[] parts = ratio.Split(':');
             if (parts.Length == 2 &&
                 double.TryParse(parts[0], out double w) &&
                 double.TryParse(parts[1], out double h))
@@ -20,6 +20,8 @@ public class AspectRatioConverter : IValueConverter
         return value;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
         throw new NotImplementedException();
+    }
 }

@@ -11,7 +11,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly SyncService _syncService;
     private readonly AuthService _authService;
     private readonly ShortsDatabase _db;
-    readonly IServiceProvider serviceProvider;
+    private readonly IServiceProvider serviceProvider;
 
     [ObservableProperty] private string userEmail;
     [ObservableProperty] private DateTime? lastSyncTime;
@@ -41,8 +41,8 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task ForceSyncAsync()
     {
-        var token = Preferences.Get(Constants.TokenName, string.Empty);
-        var exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
+        string token = Preferences.Get(Constants.TokenName, string.Empty);
+        DateTime exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
         if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
         {
             NavigationHandler.NavigateTo(new LoginPage(serviceProvider));

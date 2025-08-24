@@ -6,17 +6,17 @@ public class MediaCacheService
 
     private string GetCachePath(int id, string? url)
     {
-        var ext = Path.GetExtension(url) ?? ".mp4";
+        string ext = Path.GetExtension(url) ?? ".mp4";
         return Path.Combine(FileSystem.CacheDirectory, $"{id}{ext}");
     }
 
     public async Task<string> GetOrDownloadAsync(int id, string url)
     {
-        var localPath = GetCachePath(id, url);
+        string localPath = GetCachePath(id, url);
 
         if (!File.Exists(localPath))
         {
-            var bytes = await _httpClient.GetByteArrayAsync(url);
+            byte[] bytes = await _httpClient.GetByteArrayAsync(url);
             await File.WriteAllBytesAsync(localPath, bytes);
         }
 
@@ -25,8 +25,8 @@ public class MediaCacheService
 
     public void ClearCache()
     {
-        var files = Directory.GetFiles(FileSystem.CacheDirectory, "*.mp4");
-        foreach (var f in files)
+        string[] files = Directory.GetFiles(FileSystem.CacheDirectory, "*.mp4");
+        foreach (string f in files)
         {
             try { File.Delete(f); } catch { }
         }

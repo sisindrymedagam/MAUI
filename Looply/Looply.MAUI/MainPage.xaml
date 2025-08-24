@@ -7,9 +7,9 @@
              xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              Shell.NavBarIsVisible="False" 
              Shell.FlyoutItemIsVisible="False" 
-             Shell.TabBarIsVisible="False" BackgroundColor="Black">
+             Shell.TabBarIsVisible="False">
 
-    <Grid BackgroundColor="Black" x:Name="RootGrid">
+    <Grid x:Name="RootGrid">
         <Grid VerticalOptions="Center"
           HorizontalOptions="Center"
               HeightRequest="{Binding Source={x:Reference RootGrid}, Path=Height}"

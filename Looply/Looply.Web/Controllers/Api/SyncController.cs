@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Looply.Web.Data;
+using Looply.Web.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Looply.Web.Data;
-using Looply.Web.Models;
 
 namespace Looply.Web.Controllers.Api;
 
@@ -31,7 +31,7 @@ public class SyncController(ApplicationDbContext context) : ControllerBase
     [HttpGet]
     public IActionResult Index([FromQuery] DateTime? lastSync)
     {
-        var syncViewModel = new SyncDto<ShortsListDto>
+        SyncDto<ShortsListDto> syncViewModel = new()
         {
             ServerSyncTime = DateTime.UtcNow,
             Updates = context.Shorts.Where(s => lastSync == null || s.CreatedOn > lastSync).AsNoTracking()

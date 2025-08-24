@@ -8,7 +8,7 @@ namespace Looply.MAUI.Services;
 
 public class ApiService
 {
-    readonly IServiceProvider serviceProvider;
+    private readonly IServiceProvider serviceProvider;
 
     private readonly HttpClient _http;
 
@@ -18,8 +18,10 @@ public class ApiService
         _http = new HttpClient(new HttpClientHandler
         {
             AutomaticDecompression = System.Net.DecompressionMethods.All
-        });
-        _http.Timeout = TimeSpan.FromSeconds(30);
+        })
+        {
+            Timeout = TimeSpan.FromSeconds(30)
+        };
     }
 
     private static JsonSerializerOptions JsonOptions => new()
@@ -44,18 +46,18 @@ public class ApiService
 
     public async Task<T> PostAsync<T>(string url, object payload)
     {
-        var json = JsonSerializer.Serialize(payload);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        string json = JsonSerializer.Serialize(payload);
+        using StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        var response = await _http.PostAsync(url, content);
+        HttpResponseMessage response = await _http.PostAsync(url, content);
         if (!response.IsSuccessStatusCode)
         {
             HandleUnauthorized(response);
-            var body = await response.Content.ReadAsStringAsync();
+            string body = await response.Content.ReadAsStringAsync();
             throw new HttpRequestException($"{(int)response.StatusCode} {response.ReasonPhrase}: {body}");
         }
 
-        var str = await response.Content.ReadAsStringAsync();
+        string str = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<T>(str, JsonOptions)!;
     }
 
@@ -63,15 +65,15 @@ public class ApiService
     {
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _http.GetAsync(url);
+        HttpResponseMessage response = await _http.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             HandleUnauthorized(response);
-            var body = await response.Content.ReadAsStringAsync();
+            string body = await response.Content.ReadAsStringAsync();
             throw new HttpRequestException($"{(int)response.StatusCode} {response.ReasonPhrase}: {body}");
         }
 
-        var str = await response.Content.ReadAsStringAsync();
+        string str = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<T>(str, JsonOptions)!;
     }
 }

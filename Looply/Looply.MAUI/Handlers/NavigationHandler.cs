@@ -6,7 +6,7 @@ public static class NavigationHandler
     {
         //Replace the root page inside the existing window
 
-        var window = Application.Current?.Windows.FirstOrDefault();
+        Window? window = Application.Current?.Windows.FirstOrDefault();
         if (window != null)
         {
             window.Page = new NavigationPage(page);

@@ -1,25 +1,25 @@
-﻿using SQLite;
-using Looply.MAUI.Models;
+﻿using Looply.MAUI.Models;
+using SQLite;
 
 namespace Looply.MAUI.Services;
 public class ShortsDatabase
 {
-    SQLiteAsyncConnection database;
+    private SQLiteAsyncConnection database;
 
-    async Task Init()
+    private async Task Init()
     {
         if (database is not null)
             return;
 
         database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-        var result = await database.CreateTableAsync<ShortsListDto>();
+        CreateTableResult result = await database.CreateTableAsync<ShortsListDto>();
     }
 
     // Save or update shorts
     public async Task SaveShortsAsync(IEnumerable<ShortsListDto> shorts)
     {
         await Init();
-        foreach (var s in shorts)
+        foreach (ShortsListDto s in shorts)
         {
             await database.InsertOrReplaceAsync(s);
         }
@@ -29,7 +29,7 @@ public class ShortsDatabase
     public async Task DeleteShortsAsync(IEnumerable<int> ids)
     {
         await Init();
-        foreach (var id in ids)
+        foreach (int id in ids)
         {
             await database.DeleteAsync<ShortsListDto>(id);
         }

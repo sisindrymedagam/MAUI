@@ -1,16 +1,16 @@
-﻿using System.ComponentModel;
+﻿using Looply.MAUI.Handlers;
+using Looply.MAUI.Services;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Looply.MAUI.Handlers;
-using Looply.MAUI.Services;
 
 namespace Looply.MAUI.ViewModels;
 
 public class LoginViewModel : INotifyPropertyChanged
 {
     private readonly AuthService _authService;
-    readonly IServiceProvider serviceProvider;
+    private readonly IServiceProvider serviceProvider;
 
     public LoginViewModel(AuthService authService, IServiceProvider serviceProvider)
     {
@@ -25,9 +25,9 @@ public class LoginViewModel : INotifyPropertyChanged
     private bool _isBusy;
     private bool _isSuccess;
 
-    public string Email { get => _email; set { Set(ref _email, value); } }
-    public string Password { get => _password; set { Set(ref _password, value); } }
-    public string ErrorMessage { get => _errorMessage; set { Set(ref _errorMessage, value); } }
+    public string Email { get => _email; set => Set(ref _email, value); }
+    public string Password { get => _password; set => Set(ref _password, value); }
+    public string ErrorMessage { get => _errorMessage; set => Set(ref _errorMessage, value); }
     public bool IsBusy { get => _isBusy; set { Set(ref _isBusy, value); ((Command)LoginCommand).ChangeCanExecute(); } }
     public bool IsSuccess { get => _isSuccess; set => Set(ref _isSuccess, value); }
 
@@ -48,7 +48,7 @@ public class LoginViewModel : INotifyPropertyChanged
             if (string.IsNullOrWhiteSpace(Password))
                 throw new InvalidOperationException("Password is required.");
 
-            var resp = await _authService.LoginAsync(Email.Trim(), Password);
+            Models.AuthResponse resp = await _authService.LoginAsync(Email.Trim(), Password);
             if (string.IsNullOrWhiteSpace(resp.Token))
                 throw new InvalidOperationException("Invalid token received.");
 
@@ -71,9 +71,11 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
-    private static bool IsValidEmail(string email) =>
-        !string.IsNullOrWhiteSpace(email) &&
+    private static bool IsValidEmail(string email)
+    {
+        return !string.IsNullOrWhiteSpace(email) &&
         Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     private void Set<T>(ref T field, T value, [CallerMemberName] string? prop = null)
