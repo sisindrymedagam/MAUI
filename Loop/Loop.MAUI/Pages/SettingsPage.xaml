@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Loop.MAUI.Pages.SettingsPage"
+             xmlns:models="clr-namespace:Loop.MAUI.Models"
              Title="Settings">
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="24">
@@ -20,22 +21,36 @@
             </Frame>
 
             <!-- Sync info section -->
-            <Frame HasShadow="False" BorderColor="Transparent"
-                   CornerRadius="12" Padding="16">
-                <VerticalStackLayout Spacing="10">
+            <Frame HasShadow="False"
+       BorderColor="Transparent"
+       CornerRadius="12"
+       Padding="16">
+                <VerticalStackLayout Spacing="12">
                     <Label Text="Sync Info"
-                           FontAttributes="Bold"
-                           FontSize="18" />
+               FontAttributes="Bold"
+               FontSize="18" />
 
-                    <Grid ColumnDefinitions="Auto,*" RowSpacing="8" RowDefinitions="Auto,Auto">
-                        <Label Text="Last Sync:" Grid.Column="0" />
-                        <Label Text="{Binding LastSyncTime, StringFormat='{0:dd MMM yyyy HH:mm}'}"
-                               Grid.Column="1" />
-
-                        <Label Text="Videos Cached:" Grid.Column="0" Grid.Row="1"/>
-                        <Label Text="{Binding VideoCount}"
-                               Grid.Column="1" Grid.Row="1" />
-                    </Grid>
+                    <!-- Details section -->
+                    <CollectionView ItemsSource="{Binding SyncDetails}"
+                        SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="1" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:SyncDetail">
+                                <Grid ColumnDefinitions="Auto,*" Padding="0,4">
+                                    <Label Text="{Binding Label}"
+                               FontAttributes="Bold"
+                               Grid.Column="0"
+                               VerticalOptions="Center" />
+                                    <Label Text="{Binding Value}"
+                               Grid.Column="1"
+                               VerticalOptions="Center"
+                               LineBreakMode="TailTruncation"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
             </Frame>
 

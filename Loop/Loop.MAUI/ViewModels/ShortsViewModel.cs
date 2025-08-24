@@ -39,7 +39,7 @@ public partial class ShortsViewModel : ObservableObject
 
             List<ShortsListDto> items = await _syncService.LoadFromDbAsync();
 
-            LoadListAsync(items);
+            _ = LoadListAsync(items);
 
             // 2. Background sync with API
             _ = Task.Run(async () =>
@@ -50,7 +50,7 @@ public partial class ShortsViewModel : ObservableObject
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        LoadListAsync(apiItems); // refresh UI
+                        _ = LoadListAsync(apiItems); // refresh UI
                     });
                 }
             });

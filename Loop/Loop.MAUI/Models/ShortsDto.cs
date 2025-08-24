@@ -36,3 +36,9 @@ public class ShortsListDto
 
     public string? SizeInMB { get; set; }
 }
+
+public class SyncDetail
+{
+    public string Label { get; set; } = default!;
+    public string Value { get; set; } = default!;
+}

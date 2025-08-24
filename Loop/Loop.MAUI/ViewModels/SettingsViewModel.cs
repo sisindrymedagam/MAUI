@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Loop.MAUI.Handlers;
+using Loop.MAUI.Models;
 using Loop.MAUI.Pages;
 using Loop.MAUI.Services;
+using System.Collections.ObjectModel;
 
 namespace Loop.MAUI.ViewModels;
 
@@ -10,23 +12,25 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
     private readonly AuthService _authService;
+    private readonly MediaCacheService _cacheService;
     private readonly ShortsDatabase _db;
     private readonly IServiceProvider serviceProvider;
 
     [ObservableProperty] private string userEmail;
-    [ObservableProperty] private DateTime? lastSyncTime;
-    [ObservableProperty] private int videoCount;
+    
+    public ObservableCollection<SyncDetail> SyncDetails { get; set; }
 
     public SettingsViewModel(SyncService syncService,
         AuthService authService,
         ShortsDatabase db,
+        MediaCacheService cacheService,
         IServiceProvider serviceProvider)
     {
         _syncService = syncService;
         _authService = authService;
         _db = db;
+        _cacheService = cacheService;
         this.serviceProvider = serviceProvider;
-
         // Load from local DB
         _ = LoadInfo();
     }
@@ -34,8 +38,16 @@ public partial class SettingsViewModel : ObservableObject
     private async Task LoadInfo()
     {
         UserEmail = Preferences.Get(Constants.UserEmailName, "");
-        LastSyncTime = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
-        VideoCount = await _db.GetShortsCountAsync();
+
+        SyncDetails =
+    [
+        new SyncDetail { Label = "Last Sync:", Value = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime).ToString("dd MMM yyyy HH:mm") },
+        new SyncDetail { Label = "Videos count:", Value = (await _db.GetShortsCountAsync()).ToString() },
+        new SyncDetail { Label = "Database:", Value = Constants.DatabasePath },
+        new SyncDetail { Label = "Cache path:", Value = FileSystem.CacheDirectory },
+        new SyncDetail { Label = "Videos Cached:", Value = _cacheService.GetCachedFilesCount().ToString() }
+    ];
+        OnPropertyChanged(nameof(SyncDetails));
     }
 
     [RelayCommand]

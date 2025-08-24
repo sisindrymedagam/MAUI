@@ -53,6 +53,16 @@ public class MediaCacheService
             try { File.Delete(f); } catch { }
         }
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public int GetCachedFilesCount()
+    {
+        string[] files = Directory.GetFiles(FileSystem.CacheDirectory, "*.mp4");
+        return files.Length;
+    }
 
     ///// <summary>
     ///// Limit cache size (e.g. keep only last N files or under X MB).
