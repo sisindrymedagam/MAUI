@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Loop.MAUI.Pages.SettingsPage"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
+
+            <!-- Profile section -->
+            <Frame HasShadow="False" BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Account"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+
+                    <Label Text="{Binding UserEmail}"
+                           FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sync info section -->
+            <Frame HasShadow="False" BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Sync Info"
+                           FontAttributes="Bold"
+                           FontSize="18" />
+
+                    <Grid ColumnDefinitions="Auto,*" RowSpacing="8" RowDefinitions="Auto,Auto">
+                        <Label Text="Last Sync:" Grid.Column="0" />
+                        <Label Text="{Binding LastSyncTime, StringFormat='{0:dd MMM yyyy HH:mm}'}"
+                               Grid.Column="1" />
+
+                        <Label Text="Videos Cached:" Grid.Column="0" Grid.Row="1"/>
+                        <Label Text="{Binding VideoCount}"
+                               Grid.Column="1" Grid.Row="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Actions -->
+            <Frame HasShadow="False" BorderColor="Transparent"
+                   CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="16">
+                    <Button Text="Force Sync Now"
+                            BackgroundColor="#FF0000"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Command="{Binding ForceSyncCommand}" />
+
+                    <Button Text="Logout"
+                            BackgroundColor="{AppThemeBinding Light=#ddd, Dark=#333}"
+                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                            CornerRadius="8"
+                            Command="{Binding LogoutCommand}" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

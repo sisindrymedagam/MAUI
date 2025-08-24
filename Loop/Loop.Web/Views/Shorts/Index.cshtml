@@ -1,0 +1,27 @@
+@model IEnumerable<Loop.Web.Models.ShortsListDto>
+@{
+    ViewData["Title"] = "Shorts List";
+}
+<h1>Shorts List</h1>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Short</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size (Mb)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
+                <td>@item.Type</td>
+                <td>@item.SizeInMB</td>
+            </tr>
+        }
+    </tbody>
+</table> 
