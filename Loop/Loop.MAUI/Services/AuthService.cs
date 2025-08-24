@@ -24,7 +24,7 @@ public class AuthService
 
     public Task<AuthResponse> LoginAsync(string email, string password)
     {
-        string url = "https://ytshort.azurewebsites.net/account/token";
+        string url = "https://loop.coderons.com/account/token";
         return _api.PostAsync<AuthResponse>(url, new { Email = email, Password = password });
     }
 

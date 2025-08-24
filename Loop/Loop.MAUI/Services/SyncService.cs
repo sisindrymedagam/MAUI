@@ -20,7 +20,7 @@ public class SyncService
 
             if (force) lastSync = Constants.MinDateTime;
 
-            string url = $"https://ytshort.azurewebsites.net/api/sync?lastSync={Uri.EscapeDataString(lastSync.ToString("O"))}";
+            string url = $"https://loop.coderons.com/api/sync?lastSync={Uri.EscapeDataString(lastSync.ToString("O"))}";
             SyncViewModel<ShortsListDto> result = await _api.GetAsync<SyncViewModel<ShortsListDto>>(url, token);
 
             // Apply updates

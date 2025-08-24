@@ -3,6 +3,7 @@ using Loop.MAUI.Pages;
 using Loop.MAUI.Services;
 using Loop.MAUI.ViewModels;
 using MauiIcons.Fluent;
+using Microsoft.Extensions.Logging;
 
 namespace Loop.MAUI
 {
