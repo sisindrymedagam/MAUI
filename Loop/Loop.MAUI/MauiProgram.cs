@@ -31,6 +31,7 @@ namespace Loop.MAUI
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<SyncService>();
+            builder.Services.AddSingleton<MediaCacheService>();
 
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<ShortsViewModel>();

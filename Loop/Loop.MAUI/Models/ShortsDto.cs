@@ -32,7 +32,7 @@ public class ShortsListDto
 
     public long? Size { get; set; }
 
-    public string? URL { get; set; }
+    public string URL { get; set; } = default!;
 
     public string? SizeInMB { get; set; }
 }

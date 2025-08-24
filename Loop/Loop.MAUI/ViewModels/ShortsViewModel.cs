@@ -4,12 +4,14 @@ using Loop.MAUI.Models;
 using Loop.MAUI.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Loop.MAUI.ViewModels;
 
 public partial class ShortsViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
+    private readonly MediaCacheService _cacheService;
     private readonly IServiceProvider serviceProvider;
 
     private int _index = 0;
@@ -22,9 +24,10 @@ public partial class ShortsViewModel : ObservableObject
 
     public ObservableCollection<ShortsListDto> Shorts { get; } = [];
 
-    public ShortsViewModel(SyncService syncService, IServiceProvider serviceProvider)
+    public ShortsViewModel(SyncService syncService, MediaCacheService cacheService, IServiceProvider serviceProvider)
     {
         _syncService = syncService;
+        _cacheService = cacheService;
         this.serviceProvider = serviceProvider;
     }
 
@@ -36,7 +39,7 @@ public partial class ShortsViewModel : ObservableObject
 
             List<ShortsListDto> items = await _syncService.LoadFromDbAsync();
 
-            LoadList(items);
+            LoadListAsync(items);
 
             // 2. Background sync with API
             _ = Task.Run(async () =>
@@ -47,7 +50,7 @@ public partial class ShortsViewModel : ObservableObject
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        LoadList(apiItems); // refresh UI
+                        LoadListAsync(apiItems); // refresh UI
                     });
                 }
             });
@@ -57,7 +60,8 @@ public partial class ShortsViewModel : ObservableObject
             Debug.WriteLine(ex);
         }
     }
-    private void LoadList(List<ShortsListDto> items)
+
+    private async Task LoadListAsync(List<ShortsListDto> items)
     {
         Shorts.Clear();
         foreach (ShortsListDto s in items)
@@ -66,12 +70,26 @@ public partial class ShortsViewModel : ObservableObject
         if (Shorts.Count > 0)
         {
             _index = 0;
-            CurrentVideo = Shorts[_index];
-            UpdatePlayPosition();
+            var nextVideo = _index + 1 < Shorts.Count ? Shorts[_index + 1] : null;
+
+            // Pre-cache next
+            CacheVideo(nextVideo);
+
+            await UpdatePlayPositionAsync(Shorts[_index]);
         }
     }
+
+    private void CacheVideo(ShortsListDto? shortVid)
+    {
+        // Pre-cache next
+        if (shortVid != null)
+        {
+            _ = Task.Run(() => _cacheService.GetOrDownloadAsync(shortVid.Id, shortVid.URL));
+        }
+    }
+
     [RelayCommand]
-    private void Next()
+    private async Task Next()
     {
         if (Shorts.Count == 0) return;
 
@@ -80,12 +98,16 @@ public partial class ShortsViewModel : ObservableObject
         else
             _index = 0;
 
-        CurrentVideo = Shorts[_index];
-        UpdatePlayPosition();
+        await UpdatePlayPositionAsync(Shorts[_index]);
+
+        var nextVideo = _index + 1 < Shorts.Count ? Shorts[_index + 1] : null;
+        // Pre-cache next
+        CacheVideo(nextVideo);
+
     }
 
     [RelayCommand]
-    private void Previous()
+    private async Task Previous()
     {
         if (Shorts.Count == 0) return;
 
@@ -94,12 +116,13 @@ public partial class ShortsViewModel : ObservableObject
         else
             _index = Shorts.Count - 1;
 
-        CurrentVideo = Shorts[_index];
-        UpdatePlayPosition();
+        await UpdatePlayPositionAsync(Shorts[_index]);
     }
 
-    private void UpdatePlayPosition()
+    private async Task UpdatePlayPositionAsync(ShortsListDto shortVid)
     {
+        shortVid.URL = await _cacheService.GetOrDownloadAsync(shortVid.Id, shortVid.URL);
+        CurrentVideo = Shorts[_index];
         PlayPosition = $"{_index + 1}/{Shorts.Count}";
     }
 }
