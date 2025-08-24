@@ -3,8 +3,14 @@ using Loop.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) => configuration
+                .ReadFrom.Configuration(context.Configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext());
 
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -42,6 +48,8 @@ builder.Services.AddAuthentication("Cookies")
 builder.Services.AddAuthorization();
 
 WebApplication app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 // Apply pending migrations at startup
 using (IServiceScope scope = app.Services.CreateScope())
