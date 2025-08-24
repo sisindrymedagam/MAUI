@@ -2,26 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Loop.MAUI.Pages.LoginPage"
-             Title="Login" 
-             Shell.NavBarIsVisible="False" 
-             Shell.FlyoutItemIsVisible="False" 
+             Title="Login"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutItemIsVisible="False"
              Shell.TabBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
-    <Grid Padding="28" RowDefinitions="Auto,*,Auto" >
-        <VerticalStackLayout Spacing="16" Grid.Row="0">
-            <Label Text="Loop Shorts" FontSize="28" />
-            <Label Text="Sign in to continue" />
+    <!-- Dark blue-gray background -->
+
+    <Grid Padding="28" RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <VerticalStackLayout Spacing="4" Grid.Row="0" Margin="0,40,0,20">
+            <Label Text="Loop Kids"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+            <Label Text="Sign in to continue"
+                   FontSize="16"
+                   TextColor="#cbd5e1"
+                   HorizontalOptions="Center" />
         </VerticalStackLayout>
 
-        <VerticalStackLayout Spacing="16" Grid.Row="1" >
-            <Entry Placeholder="Email"
-                   Text="{Binding Email}"
-                   Keyboard="Email" />
-            <Entry Placeholder="Password"
-                   Text="{Binding Password}"
-                   IsPassword="True" />
+        <!-- Login Form -->
+        <VerticalStackLayout Spacing="16" Grid.Row="1" VerticalOptions="Center">
+            <Frame CornerRadius="12" Padding="14">
+                <Entry Placeholder="Email"
+                       PlaceholderColor="#94a3b8"
+                       TextColor="White"
+                       Text="{Binding Email}"
+                       Keyboard="Email" />
+            </Frame>
+
+            <Frame CornerRadius="12" Padding="14">
+                <Entry Placeholder="Password"
+                       PlaceholderColor="#94a3b8"
+                       TextColor="White"
+                       Text="{Binding Password}"
+                       IsPassword="True" />
+            </Frame>
 
             <Button Text="Sign In"
+                    CornerRadius="12"
+                    HeightRequest="48"
+                    FontAttributes="Bold"
+                    TextColor="White"
                     Command="{Binding LoginCommand}"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}">
                 <Button.Triggers>
@@ -31,10 +55,27 @@
                 </Button.Triggers>
             </Button>
 
-            <Label Text="{Binding ErrorMessage}" TextColor="#ff6b6b" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}" />
-            <Label Text="Signed in!" TextColor="#4ade80" IsVisible="{Binding IsSuccess}" />
+            <!-- Error & Success messages -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="#f87171"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <Label Text="Signed in!"
+                   TextColor="#34d399"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding IsSuccess}" />
+
         </VerticalStackLayout>
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Grid.Row="2" />
+        <!-- Loading indicator -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Grid.Row="2"
+                           HeightRequest="40"
+                           WidthRequest="40"
+                           HorizontalOptions="Center" />
     </Grid>
 </ContentPage>
