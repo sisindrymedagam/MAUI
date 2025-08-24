@@ -45,7 +45,7 @@ public partial class SettingsViewModel : ObservableObject
         var exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
         if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
         {
-            await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
+            NavigationHandler.NavigateTo(new LoginPage(serviceProvider));
             return;
         }
 
@@ -65,6 +65,7 @@ public partial class SettingsViewModel : ObservableObject
         if (!confirm) return;
 
         await _authService.Logout();
-        await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
+        NavigationHandler.NavigateTo(new LoginPage(serviceProvider));
     }
+
 }

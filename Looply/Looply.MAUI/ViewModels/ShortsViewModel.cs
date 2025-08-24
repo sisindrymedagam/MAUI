@@ -100,12 +100,6 @@ public partial class ShortsViewModel : ObservableObject
         UpdatePlayPosition();
     }
 
-    [RelayCommand]
-    private async Task NavigateSettings()
-    {
-        await NavigationHandler.NavigateToAsync(new SettingsPage(serviceProvider));
-    }
-
     private void UpdatePlayPosition()
     {
         PlayPosition = $"{_index + 1}/{Shorts.Count}";

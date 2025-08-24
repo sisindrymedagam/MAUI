@@ -35,9 +35,9 @@ public class ApiService
             Preferences.Remove(Constants.TokenName);
             Preferences.Remove(Constants.TokenExpirationName);
 
-            MainThread.BeginInvokeOnMainThread(async () =>
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                await NavigationHandler.NavigateToAsync(new LoginPage(serviceProvider));
+                NavigationHandler.NavigateTo(new LoginPage(serviceProvider));
             });
         }
     }

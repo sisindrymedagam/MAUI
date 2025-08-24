@@ -17,11 +17,23 @@ public partial class App : Application
     {
         if (AuthService.IsLogedIn())
         {
-            return new Window(new AppShell());
+            var window = new Window(new NavigationPage(new MainPage(serviceProvider)));
+            window.Destroying += (s, e) => App.StopVideoIfPlaying();
+            window.Deactivated += (s, e) => App.StopVideoIfPlaying();
+            return window;
         }
         else
         {
-            return new Window(new LoginPage(serviceProvider));
+            return new Window(new NavigationPage(new LoginPage(serviceProvider)));
+        }
+    }
+
+    private static void StopVideoIfPlaying()
+    {
+        if (Current.MainPage is NavigationPage navigationPage)
+        {
+            var shortsPage = navigationPage.CurrentPage as MainPage;
+            shortsPage?.StopVideo();
         }
     }
 }

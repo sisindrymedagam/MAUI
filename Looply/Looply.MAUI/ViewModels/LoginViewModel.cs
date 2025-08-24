@@ -59,7 +59,7 @@ public class LoginViewModel : INotifyPropertyChanged
 
             IsSuccess = true;
 
-            await NavigationHandler.NavigateToAsync(new MainPage(serviceProvider));
+            NavigationHandler.NavigateTo(new MainPage(serviceProvider));
         }
         catch (Exception ex)
         {
