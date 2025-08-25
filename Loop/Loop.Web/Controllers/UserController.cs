@@ -1,20 +1,23 @@
 ﻿using Loop.Web.Data;
+using Loop.Web.Entities;
 using Loop.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using P.Pager;
 
 namespace Loop.Web.Controllers;
 
 public class UserController(ApplicationDbContext context) : Controller
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
     {
-        var users = await context.Users.Select(s => new UserListDto
-        {
-            Id = s.Id,
-            Email = s.Email,
-            Name = s.Name
-        }).ToListAsync();
+        var users = await context.Users
+            .OrderByDescending(o => o.CreatedOn)
+            .Select(s => new UserListDto
+            {
+                Id = s.Id,
+                Email = s.Email,
+                Name = s.Name
+            }).ToPagerListAsync(page, pageSize);
         return View(users);
     }
 
@@ -55,4 +58,21 @@ public class UserController(ApplicationDbContext context) : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+
+    // POST: Shorts/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        User? user = await context.Users.FindAsync(id);
+        if (user != null)
+        {
+            context.Users.Remove(user);
+
+            await context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+
 }
