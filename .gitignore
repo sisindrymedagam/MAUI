@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /YTShorts/YTShorts.Web/appsettings.Development.json
 /YTShorts/YTShorts.Web/Properties/ServiceDependencies/
+/Loop/Loop.Web/wwwroot/uploads/

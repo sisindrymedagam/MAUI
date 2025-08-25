@@ -18,11 +18,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Register BlobServiceClient using BlobStorage section
-IConfigurationSection blobConfig = builder.Configuration.GetSection("BlobStorage");
-string blobConnectionString = blobConfig["ConnectionString"] ?? throw new InvalidOperationException("BlobStorage:ConnectionString not found.");
-builder.Services.AddSingleton(new BlobServiceClient(blobConnectionString));
-
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddAuthentication("Cookies")

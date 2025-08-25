@@ -1,5 +1,3 @@
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Loop.Web.Data;
 using Loop.Web.Entities;
 using Loop.Web.Models;
@@ -12,21 +10,20 @@ namespace Loop.Web.Controllers;
 [Authorize]
 public class ShortsController : Controller
 {
+    private readonly string FileUploadPath;
+    private readonly string BaseUrl;
     private readonly ApplicationDbContext _context;
-    private readonly BlobServiceClient _blobServiceClient;
-    private readonly string _containerName;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<HomeController> _logger;
+    private readonly IWebHostEnvironment _env;
 
     public ShortsController(ApplicationDbContext context,
-        BlobServiceClient blobServiceClient,
-        IConfiguration configuration, ILogger<HomeController> logger)
+        IWebHostEnvironment env, IConfiguration configuration)
     {
         _context = context;
-        _blobServiceClient = blobServiceClient;
+        _env = env;
         _configuration = configuration;
-        _logger = logger;
-        _containerName = _configuration["BlobStorage:ContainerName"] ?? "shortsvideos";
+        FileUploadPath = _configuration["FileUpload:FolderPath"] ?? "uploads";
+        BaseUrl = _configuration["FileUpload:ServerBaseUrl"];
     }
 
     // GET: Shorts
@@ -93,20 +90,14 @@ public class ShortsController : Controller
 
         if (ModelState.IsValid)
         {
-            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
             foreach (IFormFile file in model.Files)
             {
-                string blobName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                BlobClient blobClient = containerClient.GetBlobClient(blobName);
-                using (Stream stream = file.OpenReadStream())
-                {
-                    await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = file.ContentType });
-                }
+                var path = await UploadFileAsync(file);
+
                 Short shorts = new()
                 {
                     Name = Path.GetFileNameWithoutExtension(file.FileName),
-                    URL = blobClient.Uri.ToString(),
+                    URL = path,
                     Size = file.Length,
                     Type = file.ContentType,
                     CreatedOn = DateTime.UtcNow,
@@ -128,11 +119,13 @@ public class ShortsController : Controller
         Short? shorts = await _context.Shorts.FindAsync(id);
         if (shorts != null)
         {
-            Uri blobUri = new(shorts.URL);
-            string blobName = Path.GetFileName(blobUri.LocalPath);
-            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
-            await blobClient.DeleteIfExistsAsync();
+            var pathOnly = shorts.URL.Replace(BaseUrl, "").TrimStart('/');
+            var fullPath = Path.Combine(_env.WebRootPath, pathOnly);
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
 
             _context.Shorts.Remove(shorts);
 
@@ -147,4 +140,23 @@ public class ShortsController : Controller
         }
         return RedirectToAction(nameof(Index));
     }
+
+    private async Task<string> UploadFileAsync(IFormFile file)
+    {
+        var uploadPath = Path.Combine(_env.WebRootPath, FileUploadPath);
+        if (!Directory.Exists(uploadPath))
+            Directory.CreateDirectory(uploadPath);
+
+        var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        var fullPath = Path.Combine(uploadPath, uniqueFileName);
+
+        using (var stream = new FileStream(fullPath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // Return relative path (URL to serve from browser)
+        return $"{BaseUrl}/{FileUploadPath}/{uniqueFileName}";
+    }
+
 }
