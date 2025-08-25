@@ -1,3 +1,5 @@
+﻿﻿@using P.Pager.Mvc.Core
+@using P.Pager
 @model IEnumerable<Loop.Web.Models.ShortsListDto>
 @{
     ViewData["Title"] = "Shorts List";
@@ -24,4 +26,5 @@
             </tr>
         }
     </tbody>
-</table> 
+</table>
+@Html.Pager((IPager)Model, page => Url.Action("Index", new { page }), PrePagerOptions.MinimalWithEntriesText)

@@ -4,6 +4,7 @@ using Loop.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using P.Pager;
 
 namespace Loop.Web.Controllers;
 
@@ -27,16 +28,17 @@ public class ShortsController : Controller
     }
 
     // GET: Shorts
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
     {
-        return View(await _context.Shorts.Select(s => new ShortsListDto
-        {
-            Name = s.Name,
-            Id = s.Id,
-            Size = s.Size,
-            Type = s.Type,
-            URL = s.URL
-        }).ToListAsync());
+        return View(await _context.Shorts.OrderByDescending(o => o.CreatedOn)
+            .Select(s => new ShortsListDto
+            {
+                Name = s.Name,
+                Id = s.Id,
+                Size = s.Size,
+                Type = s.Type,
+                URL = s.URL
+            }).ToPagerListAsync(page, pageSize));
     }
 
     // GET: Shorts/Details/5
