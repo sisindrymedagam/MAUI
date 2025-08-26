@@ -60,7 +60,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Title -->
-            <Label Text="Shorts"
+            <Label Text="Loop Kids"
            Grid.Column="0"
            TextColor="White"
            FontAttributes="Bold"
