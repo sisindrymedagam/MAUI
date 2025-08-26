@@ -64,7 +64,7 @@ public partial class SettingsViewModel : ObservableObject
         await _syncService.SyncAsync(token, true);
         _cacheService.ClearCache();
         await Application.Current.MainPage.DisplayAlert("Sync", "Sync completed successfully.", "OK");
-        await LoadInfo();
+        Application.Current.Quit();
     }
 
     [RelayCommand]
