@@ -19,17 +19,20 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
+        Window window;
+
         if (AuthService.IsLogedIn())
         {
-            Window window = new(new NavigationPage(new MainPage(serviceProvider)));
-            window.Destroying += (s, e) => App.StopVideoIfPlaying();
-            window.Deactivated += (s, e) => App.StopVideoIfPlaying();
-            return window;
+            window = new Window(new NavigationPage(new MainPage(serviceProvider)));
         }
         else
         {
-            return new Window(new NavigationPage(new LoginPage(serviceProvider)));
+            window = new Window(new NavigationPage(new LoginPage(serviceProvider)));
         }
+
+        window.Destroying += (s, e) => App.StopVideoIfPlaying();
+        window.Deactivated += (s, e) => App.StopVideoIfPlaying();
+        return window;
     }
 
     private static void StopVideoIfPlaying()

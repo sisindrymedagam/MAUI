@@ -4,7 +4,6 @@ using Loop.MAUI.Models;
 using Loop.MAUI.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Loop.MAUI.ViewModels;
 

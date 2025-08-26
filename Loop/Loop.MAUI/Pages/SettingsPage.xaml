@@ -46,7 +46,7 @@
                                     <Label Text="{Binding Value}"
                                Grid.Column="1"
                                VerticalOptions="Center"
-                               LineBreakMode="TailTruncation"/>
+                               LineBreakMode="WordWrap"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

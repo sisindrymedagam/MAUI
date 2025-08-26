@@ -17,7 +17,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IServiceProvider serviceProvider;
 
     [ObservableProperty] private string userEmail;
-    
+
     public ObservableCollection<SyncDetail> SyncDetails { get; set; }
 
     public SettingsViewModel(SyncService syncService,
@@ -41,11 +41,11 @@ public partial class SettingsViewModel : ObservableObject
 
         SyncDetails =
     [
-        new SyncDetail { Label = "Last Sync:", Value = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime).ToString("dd MMM yyyy HH:mm") },
-        new SyncDetail { Label = "Videos count:", Value = (await _db.GetShortsCountAsync()).ToString() },
-        new SyncDetail { Label = "Database:", Value = Constants.DatabasePath },
-        new SyncDetail { Label = "Cache path:", Value = FileSystem.CacheDirectory },
-        new SyncDetail { Label = "Videos Cached:", Value = _cacheService.GetCachedFilesCount().ToString() }
+        new SyncDetail { Label = "Last sync: ", Value = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime).ToString("dd MMM yyyy HH:mm") },
+        new SyncDetail { Label = "Videos count: ", Value = (await _db.GetShortsCountAsync()).ToString() },
+        new SyncDetail { Label = "Database: ", Value = Constants.DatabasePath },
+        new SyncDetail { Label = "Cache path: ", Value = FileSystem.CacheDirectory },
+        new SyncDetail { Label = "Videos cached: ", Value = _cacheService.GetCachedFilesCount().ToString() }
     ];
         OnPropertyChanged(nameof(SyncDetails));
     }
@@ -62,6 +62,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         await _syncService.SyncAsync(token, true);
+        _cacheService.ClearCache();
         await Application.Current.MainPage.DisplayAlert("Sync", "Sync completed successfully.", "OK");
         await LoadInfo();
     }

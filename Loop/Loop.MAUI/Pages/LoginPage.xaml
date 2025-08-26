@@ -11,7 +11,7 @@
 
     <Grid Padding="28" RowDefinitions="Auto,*,Auto">
         <!-- Header -->
-        <VerticalStackLayout Spacing="4" Grid.Row="0" Margin="0,40,0,20">
+        <VerticalStackLayout Spacing="4" Grid.Row="0" Margin="0,30,0,20">
             <Label Text="Loop Kids"
                    FontSize="32"
                    FontAttributes="Bold"

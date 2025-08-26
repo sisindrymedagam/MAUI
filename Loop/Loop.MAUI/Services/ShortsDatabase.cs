@@ -16,9 +16,13 @@ public class ShortsDatabase
     }
 
     // Save or update shorts
-    public async Task SaveShortsAsync(IEnumerable<ShortsListDto> shorts)
+    public async Task SaveShortsAsync(IEnumerable<ShortsListDto> shorts, bool force = false)
     {
         await Init();
+
+        if (force)
+            await database.DeleteAllAsync<ShortsListDto>();
+
         foreach (ShortsListDto s in shorts)
         {
             await database.InsertOrReplaceAsync(s);
