@@ -21,10 +21,10 @@
     <Nullable>enable</Nullable>
 
     <!-- Display name -->
-    <ApplicationTitle>Loop</ApplicationTitle>
+    <ApplicationTitle>Loop Kids</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.sisindrymedagam.loop</ApplicationId>
+    <ApplicationId>com.sisindrymedagam.loopkids</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
