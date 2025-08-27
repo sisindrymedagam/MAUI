@@ -105,6 +105,7 @@
                HorizontalOptions="Start" />
                 <Label Text="{Binding CurrentVideo.Name}"
                        TextColor="White"
+                       x:Name="VideoTitleLabel"
                        FontSize="14"
                        Padding="0,0,0,5"
                        FontAttributes="Bold"

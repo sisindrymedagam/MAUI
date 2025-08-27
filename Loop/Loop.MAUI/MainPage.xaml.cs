@@ -64,6 +64,7 @@ public partial class MainPage : ContentPage
             // Fade animation for overlay
             PlayOverlay.FadeTo(1, 250, Easing.CubicIn);
             _isPaused = true;
+            VideoTitleLabel.LineBreakMode = LineBreakMode.WordWrap;
         }
     }
 
@@ -76,6 +77,7 @@ public partial class MainPage : ContentPage
             PlayOverlay.IsVisible = false;
             PlayOverlay.Opacity = 0;
             _isPaused = false;
+            VideoTitleLabel.LineBreakMode = LineBreakMode.TailTruncation;
         }
     }
 }
