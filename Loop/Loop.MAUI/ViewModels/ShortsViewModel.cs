@@ -11,7 +11,6 @@ public partial class ShortsViewModel : ObservableObject
 {
     private readonly SyncService _syncService;
     private readonly MediaCacheService _cacheService;
-    private readonly IServiceProvider serviceProvider;
 
     private int _index = 0;
 
@@ -23,11 +22,10 @@ public partial class ShortsViewModel : ObservableObject
 
     public ObservableCollection<ShortsListDto> Shorts { get; } = [];
 
-    public ShortsViewModel(SyncService syncService, MediaCacheService cacheService, IServiceProvider serviceProvider)
+    public ShortsViewModel(SyncService syncService, MediaCacheService cacheService)
     {
         _syncService = syncService;
         _cacheService = cacheService;
-        this.serviceProvider = serviceProvider;
     }
 
     public async Task LoadOrSyncAsync()
