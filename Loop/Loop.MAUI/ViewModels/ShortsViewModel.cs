@@ -123,7 +123,7 @@ public partial class ShortsViewModel : ObservableObject
     {
         shortVid.URL = await _cacheService.GetOrDownloadAsync(shortVid.Id, shortVid.URL);
         CurrentVideo = Shorts[_index];
-        PlayPosition = $"{_index + 1}/{Shorts.Count}";
+        PlayPosition = $"{_index + 1} / {Shorts.Count}";
         SaveCurrentVideoPosition();
     }
 

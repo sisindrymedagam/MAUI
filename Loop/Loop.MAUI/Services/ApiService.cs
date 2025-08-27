@@ -34,8 +34,8 @@ public class ApiService
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
             // clear session and route to login
-            Preferences.Remove(Constants.TokenName);
-            Preferences.Remove(Constants.TokenExpirationName);
+            SecureStorage.Remove(Constants.TokenName);
+            SecureStorage.Remove(Constants.TokenExpirationName);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {

@@ -14,6 +14,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly AuthService _authService;
     private readonly MediaCacheService _cacheService;
     private readonly ShortsDatabase _db;
+    private readonly ISecureStorageService secureStorageService;
     private readonly IServiceProvider serviceProvider;
 
     [ObservableProperty] private string userEmail;
@@ -24,6 +25,7 @@ public partial class SettingsViewModel : ObservableObject
         AuthService authService,
         ShortsDatabase db,
         MediaCacheService cacheService,
+        ISecureStorageService secureStorageService,
         IServiceProvider serviceProvider)
     {
         _syncService = syncService;
@@ -31,13 +33,14 @@ public partial class SettingsViewModel : ObservableObject
         _db = db;
         _cacheService = cacheService;
         this.serviceProvider = serviceProvider;
+        this.secureStorageService = secureStorageService;
         // Load from local DB
         _ = LoadInfo();
     }
 
     private async Task LoadInfo()
     {
-        UserEmail = Preferences.Get(Constants.UserEmailName, "");
+        UserEmail = await secureStorageService.GetAsync(Constants.UserEmailName);
 
         SyncDetails =
     [
@@ -53,16 +56,17 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task ForceSyncAsync()
     {
-        string token = Preferences.Get(Constants.TokenName, string.Empty);
-        DateTime exp = Preferences.Get(Constants.TokenExpirationName, DateTime.MinValue);
-        if (string.IsNullOrWhiteSpace(token) || exp <= DateTime.UtcNow)
+        bool isloggedin = await _authService.IsLoggedInAsync();
+        if (!isloggedin)
         {
             NavigationHandler.NavigateTo(new LoginPage(serviceProvider));
             return;
         }
 
+        string token = await secureStorageService.GetAsync(Constants.TokenName);
         await _syncService.SyncAsync(token, true);
         _cacheService.ClearCache();
+        Preferences.Set(Constants.CurrentVideoIndexName, 0);
         await Application.Current.MainPage.DisplayAlert("Sync", "Sync completed successfully.", "OK");
         Application.Current.Quit();
     }
