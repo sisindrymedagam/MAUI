@@ -5,6 +5,8 @@
              xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Loop Kids"
              xmlns:icon="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:vm="clr-namespace:Loop.MAUI.ViewModels"
+             x:DataType="vm:ShortsViewModel"
              Shell.NavBarIsVisible="False" 
              Shell.FlyoutItemIsVisible="False" 
              Shell.TabBarIsVisible="False">
@@ -93,10 +95,11 @@
             </Grid.RowDefinitions>
 
             <!-- Gradient for readability -->
-            <BoxView HeightRequest="120"
-                     Grid.RowSpan="2"
+            <BoxView HeightRequest="96"
+                     Grid.RowSpan="1"
+                     x:Name="VideoInfoBoxViewContainer"
                      VerticalOptions="End"
-                     Opacity="0.5">
+                     Opacity="0.4">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="Transparent" Offset="0.0" />
@@ -106,7 +109,7 @@
             </BoxView>
 
             <!-- Text overlay -->
-            <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Padding="10" Spacing="4" x:Name="VideoInfoContainer">
+            <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Padding="10" x:Name="VideoInfoContainer">
                 <Label Text="{Binding PlayPosition}"
                TextColor="White"
                FontSize="12"
@@ -116,7 +119,7 @@
                        TextColor="White"
                        x:Name="VideoTitleLabel"
                        FontSize="14"
-                       Padding="0,0,0,5"
+                       Padding="0,0,0,0"
                        FontAttributes="Bold"
                        LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
@@ -125,7 +128,6 @@
             <Grid Grid.Row="1" VerticalOptions="End"
                   HorizontalOptions="Fill"
                   IsVisible="False"
-                  Margin="0,16,0,8"
                   x:Name="ProgressContainer">
                 <Slider x:Name="ProgressSlider"
                         Minimum="0"

@@ -88,12 +88,16 @@ public partial class MainPage : ContentPage
         if (VideoContainer == null) return;
 
         _isTransitioning = true;
+        if (VideoInfoContainer != null)
+            VideoInfoContainer.InputTransparent = true;
 
         double height = _containerHeight > 0 ? _containerHeight : (VideoContainer.Height > 0 ? VideoContainer.Height : RootGrid.Height);
         if (height <= 0)
         {
             // layout not ready; skip animation but still switch
             await ExecuteSwitchAsync(next);
+            if (VideoInfoContainer != null)
+                VideoInfoContainer.InputTransparent = false;
             _isTransitioning = false;
             return;
         }
@@ -116,7 +120,10 @@ public partial class MainPage : ContentPage
         var slideInTask = VideoContainer.TranslateTo(0, 0, 220, Easing.CubicOut);
         await Task.WhenAll(fadeInTask, slideInTask);
 
-        //PlayPlayer();
+        // slight cooldown to avoid rapid re-entry and let layout settle
+        await Task.Delay(120);
+        if (VideoInfoContainer != null)
+            VideoInfoContainer.InputTransparent = false;
         _isTransitioning = false;
     }
 
@@ -128,6 +135,8 @@ public partial class MainPage : ContentPage
                 await (VM?.NextCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
             else
                 await (VM?.PreviousCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
+            // let UI/layout settle before resuming playback
+            await Task.Yield();
             PlayPlayer();
         }
         catch
@@ -150,6 +159,7 @@ public partial class MainPage : ContentPage
             PlayOverlay.FadeTo(1, 250, Easing.CubicIn);
             PauseOverlay.FadeTo(0.35, 250, Easing.CubicIn);
             _isPaused = true;
+            Grid.SetRowSpan(VideoInfoBoxViewContainer, 2);
             VideoTitleLabel.LineBreakMode = LineBreakMode.WordWrap;
         }
     }
@@ -166,6 +176,7 @@ public partial class MainPage : ContentPage
             PauseOverlay.IsVisible = false;
             ProgressContainer.IsVisible = false;
             _isPaused = false;
+            Grid.SetRowSpan(VideoInfoBoxViewContainer, 1);
             VideoTitleLabel.LineBreakMode = LineBreakMode.TailTruncation;
         }
     }
@@ -214,7 +225,8 @@ public partial class MainPage : ContentPage
         try
         {
             Player.SeekTo(TimeSpan.FromSeconds(targetSeconds));
-            ProgressSlider.Value = targetSeconds;
+            if (ProgressSlider != null)
+                ProgressSlider.Value = targetSeconds;
         }
         catch { }
         finally
