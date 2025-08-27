@@ -68,7 +68,8 @@ public partial class ShortsViewModel : ObservableObject
 
         if (Shorts.Count > 0)
         {
-            _index = 0;
+            LoadCurrentVideoPosition();
+
             var nextVideo = _index + 1 < Shorts.Count ? Shorts[_index + 1] : null;
 
             // Pre-cache next
@@ -123,5 +124,18 @@ public partial class ShortsViewModel : ObservableObject
         shortVid.URL = await _cacheService.GetOrDownloadAsync(shortVid.Id, shortVid.URL);
         CurrentVideo = Shorts[_index];
         PlayPosition = $"{_index + 1}/{Shorts.Count}";
+        SaveCurrentVideoPosition();
+    }
+
+    private void SaveCurrentVideoPosition()
+    {
+        Preferences.Set(Constants.CurrentVideoIndexName, _index);
+    }
+
+    private void LoadCurrentVideoPosition()
+    {
+        _index = Preferences.Get(Constants.CurrentVideoIndexName, 0);
+        if (_index < 0 || _index >= Shorts.Count)
+            _index = 0;
     }
 }

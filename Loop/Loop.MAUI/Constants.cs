@@ -21,4 +21,5 @@ public static class Constants
 
     public const string UserEmailName = "UserEmail";
     public const string LastSyncUtcName = "LastSyncUtc";
+    public const string CurrentVideoIndexName = "CurrentVideoIndex";
 }

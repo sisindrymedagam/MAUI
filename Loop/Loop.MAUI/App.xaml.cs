@@ -17,11 +17,21 @@ public partial class App : Application
         InitializeComponent();
     }
 
+    protected override async void OnStart()
+    {
+        base.OnStart();
+        
+        // Initialize any startup services here if needed
+        await Task.CompletedTask;
+    }
+
     protected override Window CreateWindow(IActivationState? activationState)
     {
         Window window;
 
-        if (AuthService.IsLogedIn())
+        // Check authentication status
+        var authService = serviceProvider.GetService<AuthService>();
+        if (authService != null && authService.IsLoggedInAsync().Result)
         {
             window = new Window(new NavigationPage(new MainPage(serviceProvider)));
         }

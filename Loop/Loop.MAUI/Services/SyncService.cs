@@ -6,16 +6,31 @@ public class SyncService
 {
     private readonly ApiService _api;
     private readonly ShortsDatabase _db;
-    public SyncService(ApiService api, ShortsDatabase db)
+    private readonly AuthService _authService;
+    
+    public SyncService(ApiService api, ShortsDatabase db, AuthService authService)
     {
         _api = api;
         _db = db;
+        _authService = authService;
     }
 
-    public async Task<List<ShortsListDto>> SyncAsync(string token, bool force = false)
+    public async Task<List<ShortsListDto>> SyncAsync(string? token = null, bool force = false)
     {
         try
         {
+            // Get token from AuthService if not provided
+            if (string.IsNullOrEmpty(token))
+            {
+                token = await _authService.GetCurrentTokenAsync();
+            }
+
+            if (string.IsNullOrEmpty(token))
+            {
+                // No valid token, return cached data only
+                return await _db.GetShortsAsync();
+            }
+
             DateTime lastSync = Preferences.Get(Constants.LastSyncUtcName, Constants.MinDateTime);
 
             if (force) lastSync = Constants.MinDateTime;
@@ -36,8 +51,10 @@ public class SyncService
 
             return await _db.GetShortsAsync();
         }
-        catch
+        catch (Exception ex)
         {
+            // Log error but return cached data
+            System.Diagnostics.Debug.WriteLine($"Sync error: {ex.Message}");
             return await _db.GetShortsAsync();
         }
     }
@@ -46,5 +63,4 @@ public class SyncService
     {
         return await _db.GetShortsAsync();
     }
-
 }

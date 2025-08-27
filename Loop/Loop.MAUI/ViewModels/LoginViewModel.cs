@@ -2,7 +2,6 @@
 using Loop.MAUI.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Loop.MAUI.ViewModels;
@@ -10,11 +9,13 @@ namespace Loop.MAUI.ViewModels;
 public class LoginViewModel : INotifyPropertyChanged
 {
     private readonly AuthService _authService;
+    private readonly IValidationService _validationService;
     private readonly IServiceProvider serviceProvider;
 
-    public LoginViewModel(AuthService authService, IServiceProvider serviceProvider)
+    public LoginViewModel(AuthService authService, IValidationService validationService, IServiceProvider serviceProvider)
     {
         _authService = authService;
+        _validationService = validationService;
         this.serviceProvider = serviceProvider;
         LoginCommand = new Command(async () => await LoginAsync(), () => !IsBusy);
     }
@@ -42,20 +43,22 @@ public class LoginViewModel : INotifyPropertyChanged
             ErrorMessage = "";
             IsSuccess = false;
 
-            if (!IsValidEmail(Email))
-                throw new InvalidOperationException("Please enter a valid email.");
+            // Use validation service
+            var emailValidation = _validationService.ValidateEmail(Email);
+            if (!emailValidation.IsValid)
+                throw new InvalidOperationException(emailValidation.ErrorMessage);
 
-            if (string.IsNullOrWhiteSpace(Password))
-                throw new InvalidOperationException("Password is required.");
+            var passwordValidation = _validationService.ValidatePassword(Password);
+            if (!passwordValidation.IsValid)
+                throw new InvalidOperationException(passwordValidation.ErrorMessage);
 
             Models.AuthResponse resp = await _authService.LoginAsync(Email.Trim(), Password);
             if (string.IsNullOrWhiteSpace(resp.Token))
                 throw new InvalidOperationException("Invalid token received.");
 
-            Preferences.Set(Constants.TokenName, resp.Token);
-            Preferences.Set(Constants.TokenExpirationName, resp.Expiration.ToUniversalTime());
+            // Note: AuthService now handles secure storage, so we don't need to set Preferences here
+            // But we still need to set some preferences for backward compatibility
             Preferences.Set(Constants.LastSyncUtcName, Constants.MinDateTime);
-            Preferences.Set(Constants.UserEmailName, Email);
 
             IsSuccess = true;
 
@@ -69,12 +72,6 @@ public class LoginViewModel : INotifyPropertyChanged
         {
             IsBusy = false;
         }
-    }
-
-    private static bool IsValidEmail(string email)
-    {
-        return !string.IsNullOrWhiteSpace(email) &&
-        Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

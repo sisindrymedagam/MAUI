@@ -77,7 +77,7 @@ public partial class SettingsViewModel : ObservableObject
 
         if (!confirm) return;
 
-        await _authService.Logout();
+        await _authService.LogoutAsync();
         NavigationHandler.NavigateTo(new LoginPage(serviceProvider));
     }
 
