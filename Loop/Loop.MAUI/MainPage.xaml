@@ -25,6 +25,15 @@
                           VerticalOptions="Fill"
                           HorizontalOptions="Fill" />
 
+            <!-- Fullscreen dim overlay when paused -->
+            <BoxView x:Name="PauseOverlay"
+                     BackgroundColor="#000000"
+                     Opacity="0"
+                     IsVisible="False"
+                     InputTransparent="True"
+                     VerticalOptions="Fill"
+                     HorizontalOptions="Fill" />
+
             <!-- Center play icon (shown only when paused) -->
             <Image x:Name="PlayOverlay"
                    Source="{icon:Fluent Icon=PlayCircle24, IconSize=64, IconColor=#FFFFFF}"

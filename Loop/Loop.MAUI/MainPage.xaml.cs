@@ -112,6 +112,7 @@ public partial class MainPage : ContentPage
                 await (VM?.NextCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
             else
                 await (VM?.PreviousCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
+            PlayPlayer();
         }
         catch
         {
@@ -125,9 +126,11 @@ public partial class MainPage : ContentPage
         {
             Player.Pause();
             PlayOverlay.IsVisible = true;
+            PauseOverlay.IsVisible = true;
 
             // Fade animation for overlay
             PlayOverlay.FadeTo(1, 250, Easing.CubicIn);
+            PauseOverlay.FadeTo(0.35, 250, Easing.CubicIn);
             _isPaused = true;
             VideoTitleLabel.LineBreakMode = LineBreakMode.WordWrap;
         }
@@ -141,6 +144,8 @@ public partial class MainPage : ContentPage
             Player.Play();
             PlayOverlay.IsVisible = false;
             PlayOverlay.Opacity = 0;
+            PauseOverlay.FadeTo(0, 200, Easing.CubicOut);
+            PauseOverlay.IsVisible = false;
             _isPaused = false;
             VideoTitleLabel.LineBreakMode = LineBreakMode.TailTruncation;
         }
