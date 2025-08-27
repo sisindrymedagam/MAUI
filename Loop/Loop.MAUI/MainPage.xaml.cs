@@ -8,6 +8,8 @@ public partial class MainPage : ContentPage
     private ShortsViewModel? VM => BindingContext as ShortsViewModel;
     private bool _isPaused = false;
     private bool _isTransitioning = false;
+    private double _containerHeight = 0;
+    private bool _isDraggingProgress = false;
     private readonly IServiceProvider ServiceProvider;
     public MainPage(IServiceProvider serviceProvider)
     {
@@ -15,6 +17,19 @@ public partial class MainPage : ContentPage
         BindingContext = serviceProvider.GetService<ShortsViewModel>();
         ServiceProvider = serviceProvider;
         NavigationPage.SetHasNavigationBar(this, false);
+
+        if (Player != null)
+        {
+            Player.MediaOpened += OnMediaOpened;
+        }
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        double h = VideoContainer?.Height > 0 ? VideoContainer.Height : RootGrid.Height;
+        if (h > 0)
+            _containerHeight = h;
     }
 
     protected override async void OnAppearing()
@@ -24,6 +39,7 @@ public partial class MainPage : ContentPage
         if (Player != null && Player.Source != null)
         {
             PlayPlayer();
+            UpdateProgressFromPlayer();
         }
         else
         {
@@ -52,7 +68,7 @@ public partial class MainPage : ContentPage
     private void NavigateToSettings(object sender, EventArgs e)
     {
         PausePlayer();
-        Navigation.PushAsync(new NavigationPage(new SettingsPage(ServiceProvider)), true);
+        Navigation.PushAsync(new SettingsPage(ServiceProvider), true);
     }
 
     private async void OnSwipedUp(object sender, SwipedEventArgs e)
@@ -73,7 +89,7 @@ public partial class MainPage : ContentPage
 
         _isTransitioning = true;
 
-        double height = VideoContainer.Height > 0 ? VideoContainer.Height : RootGrid.Height;
+        double height = _containerHeight > 0 ? _containerHeight : (VideoContainer.Height > 0 ? VideoContainer.Height : RootGrid.Height);
         if (height <= 0)
         {
             // layout not ready; skip animation but still switch
@@ -127,6 +143,8 @@ public partial class MainPage : ContentPage
             Player.Pause();
             PlayOverlay.IsVisible = true;
             PauseOverlay.IsVisible = true;
+            ProgressContainer.IsVisible = true;
+            UpdateProgressFromPlayer();
 
             // Fade animation for overlay
             PlayOverlay.FadeTo(1, 250, Easing.CubicIn);
@@ -146,8 +164,64 @@ public partial class MainPage : ContentPage
             PlayOverlay.Opacity = 0;
             PauseOverlay.FadeTo(0, 200, Easing.CubicOut);
             PauseOverlay.IsVisible = false;
+            ProgressContainer.IsVisible = false;
             _isPaused = false;
             VideoTitleLabel.LineBreakMode = LineBreakMode.TailTruncation;
+        }
+    }
+
+    private void OnMediaOpened(object? sender, EventArgs e)
+    {
+        UpdateProgressFromPlayer();
+    }
+
+    private void UpdateProgressFromPlayer()
+    {
+        if (Player == null || ProgressSlider == null) return;
+        double durationSeconds = Player.Duration.TotalSeconds;
+        if (double.IsInfinity(durationSeconds) || double.IsNaN(durationSeconds) || durationSeconds <= 0)
+        {
+            // Unknown duration, set a safe max and reset value
+            ProgressSlider.Maximum = 1;
+            if (!_isDraggingProgress) ProgressSlider.Value = 0;
+            return;
+        }
+
+        double totalSeconds = durationSeconds;
+        double currentSeconds = Player.Position.TotalSeconds;
+        if (currentSeconds < 0) currentSeconds = 0;
+        if (currentSeconds > totalSeconds) currentSeconds = totalSeconds;
+        ProgressSlider.Maximum = totalSeconds;
+        if (!_isDraggingProgress)
+            ProgressSlider.Value = currentSeconds;
+    }
+
+    private void OnProgressDragStarted(object sender, EventArgs e)
+    {
+        _isDraggingProgress = true;
+    }
+
+    private void OnProgressDragCompleted(object sender, EventArgs e)
+    {
+        if (Player == null) { _isDraggingProgress = false; return; }
+        double targetSeconds = ProgressSlider?.Value ?? 0;
+        if (targetSeconds < 0) targetSeconds = 0;
+        double durationSeconds = Player.Duration.TotalSeconds;
+        if (double.IsInfinity(durationSeconds) || double.IsNaN(durationSeconds) || durationSeconds <= 0)
+            durationSeconds = 0;
+        if (durationSeconds > 0 && targetSeconds > durationSeconds)
+            targetSeconds = durationSeconds;
+        try
+        {
+            Player.SeekTo(TimeSpan.FromSeconds(targetSeconds));
+            ProgressSlider.Value = targetSeconds;
+        }
+        catch { }
+        finally
+        {
+            _isDraggingProgress = false;
+            // Stay paused; user can tap to play
+            UpdateProgressFromPlayer();
         }
     }
 }

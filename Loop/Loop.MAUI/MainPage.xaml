@@ -40,14 +40,9 @@
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
                    Opacity="0"
-                   IsVisible="False">
-                <Image.Shadow>
-                    <Shadow Brush="Black"
-    Offset="2,2"
-    Radius="8"
-    Opacity="0.8" />
-                </Image.Shadow>
-            </Image>
+                   IsVisible="False"/>
+
+            
         </Grid>
 
         <!-- Custom transparent toolbar overlay -->
@@ -92,9 +87,14 @@
         <!-- Overlay bottom details -->
         <Grid VerticalOptions="End"
               BackgroundColor="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
             <!-- Gradient for readability -->
             <BoxView HeightRequest="120"
+                     Grid.RowSpan="2"
                      VerticalOptions="End"
                      Opacity="0.5">
                 <BoxView.Background>
@@ -106,7 +106,7 @@
             </BoxView>
 
             <!-- Text overlay -->
-            <VerticalStackLayout VerticalOptions="End" Padding="10" Spacing="4">
+            <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Padding="10" Spacing="4" x:Name="VideoInfoContainer">
                 <Label Text="{Binding PlayPosition}"
                TextColor="White"
                FontSize="12"
@@ -120,6 +120,21 @@
                        FontAttributes="Bold"
                        LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
+
+            <!-- Progress slider shown only when paused (at bottom of this overlay) -->
+            <Grid Grid.Row="1" VerticalOptions="End"
+                  HorizontalOptions="Fill"
+                  IsVisible="False"
+                  Margin="0,16,0,8"
+                  x:Name="ProgressContainer">
+                <Slider x:Name="ProgressSlider"
+                        Minimum="0"
+                        MinimumTrackColor="{StaticResource PrimaryDark}"
+                        MaximumTrackColor="#44FFFFFF"
+                        ThumbColor="{StaticResource PrimaryDark}"
+                        DragStarted="OnProgressDragStarted"
+                        DragCompleted="OnProgressDragCompleted" />
+            </Grid>
         </Grid>
         <!-- Attach swipe gestures to Grid (not ContentPage) -->
         <Grid.GestureRecognizers>
