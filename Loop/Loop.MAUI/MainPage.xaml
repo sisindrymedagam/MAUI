@@ -10,7 +10,7 @@
              Shell.TabBarIsVisible="False">
 
     <Grid x:Name="RootGrid">
-        <Grid VerticalOptions="Center"
+        <Grid x:Name="VideoContainer" VerticalOptions="Center"
           HorizontalOptions="Center"
               HeightRequest="{Binding Source={x:Reference RootGrid}, Path=Height}"
           WidthRequest="{Binding Source={x:Reference RootGrid}, Path=Height, Converter={StaticResource AspectRatioConverter}, ConverterParameter=9:16}">
@@ -114,8 +114,8 @@
         </Grid>
         <!-- Attach swipe gestures to Grid (not ContentPage) -->
         <Grid.GestureRecognizers>
-            <SwipeGestureRecognizer Direction="Up" Command="{Binding NextCommand}" />
-            <SwipeGestureRecognizer Direction="Down" Command="{Binding PreviousCommand}" />
+            <SwipeGestureRecognizer Direction="Up" Swiped="OnSwipedUp" />
+            <SwipeGestureRecognizer Direction="Down" Swiped="OnSwipedDown" />
             <TapGestureRecognizer Tapped="OnVideoTapped" />
         </Grid.GestureRecognizers>
     </Grid>

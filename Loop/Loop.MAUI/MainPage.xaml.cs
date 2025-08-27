@@ -7,6 +7,7 @@ public partial class MainPage : ContentPage
 {
     private ShortsViewModel? VM => BindingContext as ShortsViewModel;
     private bool _isPaused = false;
+    private bool _isTransitioning = false;
     private readonly IServiceProvider ServiceProvider;
     public MainPage(IServiceProvider serviceProvider)
     {
@@ -52,6 +53,70 @@ public partial class MainPage : ContentPage
     {
         PausePlayer();
         Navigation.PushAsync(new NavigationPage(new SettingsPage(ServiceProvider)), true);
+    }
+
+    private async void OnSwipedUp(object sender, SwipedEventArgs e)
+    {
+        if (_isTransitioning || VM is null) return;
+        await AnimateAndSwitchAsync(next: true);
+    }
+
+    private async void OnSwipedDown(object sender, SwipedEventArgs e)
+    {
+        if (_isTransitioning || VM is null) return;
+        await AnimateAndSwitchAsync(next: false);
+    }
+
+    private async Task AnimateAndSwitchAsync(bool next)
+    {
+        if (VideoContainer == null) return;
+
+        _isTransitioning = true;
+
+        double height = VideoContainer.Height > 0 ? VideoContainer.Height : RootGrid.Height;
+        if (height <= 0)
+        {
+            // layout not ready; skip animation but still switch
+            await ExecuteSwitchAsync(next);
+            _isTransitioning = false;
+            return;
+        }
+
+        //PausePlayer();
+
+        double outY = next ? -height : height;
+        double inStartY = next ? height : -height;
+
+        var fadeOutTask = VideoContainer.FadeTo(0, 150, Easing.CubicIn);
+        var slideOutTask = VideoContainer.TranslateTo(0, outY, 200, Easing.CubicIn);
+        await Task.WhenAll(fadeOutTask, slideOutTask);
+
+        await ExecuteSwitchAsync(next);
+
+        VideoContainer.TranslationY = inStartY;
+        VideoContainer.Opacity = 0;
+
+        var fadeInTask = VideoContainer.FadeTo(1, 180, Easing.CubicOut);
+        var slideInTask = VideoContainer.TranslateTo(0, 0, 220, Easing.CubicOut);
+        await Task.WhenAll(fadeInTask, slideInTask);
+
+        //PlayPlayer();
+        _isTransitioning = false;
+    }
+
+    private async Task ExecuteSwitchAsync(bool next)
+    {
+        try
+        {
+            if (next)
+                await (VM?.NextCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
+            else
+                await (VM?.PreviousCommand?.ExecuteAsync(null) ?? Task.CompletedTask);
+        }
+        catch
+        {
+            // ignore and continue to avoid crashing on gesture spam
+        }
     }
 
     private void PausePlayer()
