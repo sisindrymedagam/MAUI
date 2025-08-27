@@ -27,19 +27,16 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        Window window;
+        // Start with a default page without blocking the UI thread
+        Window window = new(new NavigationPage(new LoginPage(serviceProvider)));
 
-        // Check authentication status
+        // Check authentication status asynchronously and swap the root page if needed
         var authService = serviceProvider.GetService<AuthService>();
+
         if (authService != null && authService.IsLoggedInAsync().Result)
         {
             window = new Window(new NavigationPage(new MainPage(serviceProvider)));
         }
-        else
-        {
-            window = new Window(new NavigationPage(new LoginPage(serviceProvider)));
-        }
-
         window.Destroying += (s, e) => App.StopVideoIfPlaying();
         window.Deactivated += (s, e) => App.StopVideoIfPlaying();
         return window;

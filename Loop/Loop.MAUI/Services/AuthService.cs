@@ -21,8 +21,8 @@ public class AuthService
     {
         try
         {
-            string? token = await _secureStorage.GetAsync(Constants.TokenName);
-            string? expirationStr = await _secureStorage.GetAsync(Constants.TokenExpirationName);
+            string? token = await _secureStorage.GetAsync(Constants.TokenName).ConfigureAwait(false);
+            string? expirationStr = await _secureStorage.GetAsync(Constants.TokenExpirationName).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(expirationStr))
                 return false;
@@ -35,7 +35,7 @@ public class AuthService
             // If token is expired, clean it up
             if (!isValid)
             {
-                await LogoutAsync();
+                await LogoutAsync().ConfigureAwait(false);
             }
             
             return isValid;
@@ -60,21 +60,21 @@ public class AuthService
         try
         {
             string url = "https://loop.coderons.com/account/token";
-            var response = await _api.PostAsync<AuthResponse>(url, new { Email = email, Password = password });
+            var response = await _api.PostAsync<AuthResponse>(url, new { Email = email, Password = password }).ConfigureAwait(false);
 
             // Store credentials securely
-            await _secureStorage.SetAsync(Constants.TokenName, response.Token);
-            await _secureStorage.SetAsync(Constants.TokenExpirationName, response.Expiration.ToString("O"));
-            await _secureStorage.SetAsync(Constants.UserEmailName, email);
+            await _secureStorage.SetAsync(Constants.TokenName, response.Token).ConfigureAwait(false);
+            await _secureStorage.SetAsync(Constants.TokenExpirationName, response.Expiration.ToString("O")).ConfigureAwait(false);
+            await _secureStorage.SetAsync(Constants.UserEmailName, email).ConfigureAwait(false);
 
             return response;
         }
         catch (Exception ex)
         {
             // Clear any partial data on error
-            await _secureStorage.RemoveAsync(Constants.TokenName);
-            await _secureStorage.RemoveAsync(Constants.TokenExpirationName);
-            await _secureStorage.RemoveAsync(Constants.UserEmailName);
+            await _secureStorage.RemoveAsync(Constants.TokenName).ConfigureAwait(false);
+            await _secureStorage.RemoveAsync(Constants.TokenExpirationName).ConfigureAwait(false);
+            await _secureStorage.RemoveAsync(Constants.UserEmailName).ConfigureAwait(false);
             throw;
         }
     }
@@ -85,7 +85,7 @@ public class AuthService
         {
             SecureStorage.RemoveAll();
             // Clear database
-            await _db.DeleteAllShortsAsync();
+            await _db.DeleteAllShortsAsync().ConfigureAwait(false);
             Preferences.Clear();
         }
         catch (Exception ex)
@@ -99,9 +99,9 @@ public class AuthService
     {
         try
         {
-            if (await IsLoggedInAsync())
+            if (await IsLoggedInAsync().ConfigureAwait(false))
             {
-                return await _secureStorage.GetAsync(Constants.TokenName);
+                return await _secureStorage.GetAsync(Constants.TokenName).ConfigureAwait(false);
             }
             return null;
         }
@@ -115,7 +115,7 @@ public class AuthService
     {
         try
         {
-            return await _secureStorage.GetAsync(Constants.UserEmailName);
+            return await _secureStorage.GetAsync(Constants.UserEmailName).ConfigureAwait(false);
         }
         catch
         {

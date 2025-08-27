@@ -14,7 +14,7 @@ public class SecureStorageService : ISecureStorageService
     {
         try
         {
-            return await SecureStorage.Default.GetAsync(key);
+            return await SecureStorage.Default.GetAsync(key).ConfigureAwait(false);
         }
         catch
         {
@@ -27,7 +27,7 @@ public class SecureStorageService : ISecureStorageService
     {
         try
         {
-            await SecureStorage.Default.SetAsync(key, value);
+            await SecureStorage.Default.SetAsync(key, value).ConfigureAwait(false);
         }
         catch
         {
@@ -55,7 +55,7 @@ public class SecureStorageService : ISecureStorageService
     {
         try
         {
-            var value = await SecureStorage.Default.GetAsync(key);
+            var value = await SecureStorage.Default.GetAsync(key).ConfigureAwait(false);
             return !string.IsNullOrEmpty(value);
         }
         catch
