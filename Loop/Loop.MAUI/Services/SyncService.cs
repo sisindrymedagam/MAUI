@@ -7,7 +7,7 @@ public class SyncService
     private readonly ApiService _api;
     private readonly ShortsDatabase _db;
     private readonly AuthService _authService;
-    
+
     public SyncService(ApiService api, ShortsDatabase db, AuthService authService)
     {
         _api = api;
@@ -15,15 +15,11 @@ public class SyncService
         _authService = authService;
     }
 
-    public async Task<List<ShortsListDto>> SyncAsync(string? token = null, bool force = false)
+    public async Task<List<ShortsListDto>> SyncAsync(bool force = false)
     {
         try
         {
-            // Get token from AuthService if not provided
-            if (string.IsNullOrEmpty(token))
-            {
-                token = await _authService.GetCurrentTokenAsync();
-            }
+            string token = await _authService.GetCurrentTokenAsync();
 
             if (string.IsNullOrEmpty(token))
             {
@@ -49,7 +45,7 @@ public class SyncService
             // Update sync timestamp
             Preferences.Set(Constants.LastSyncUtcName, result.ServerSyncTime);
 
-            return await _db.GetShortsAsync();
+            return result.Updates;
         }
         catch (Exception ex)
         {

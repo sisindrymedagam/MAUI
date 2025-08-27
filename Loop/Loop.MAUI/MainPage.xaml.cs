@@ -176,7 +176,7 @@ public partial class MainPage : ContentPage
             PauseOverlay.IsVisible = false;
             ProgressContainer.IsVisible = false;
             _isPaused = false;
-            Grid.SetRowSpan(VideoInfoBoxViewContainer, 1);
+            Grid.SetRowSpan(VideoInfoBoxViewContainer, 0);
             VideoTitleLabel.LineBreakMode = LineBreakMode.TailTruncation;
         }
     }

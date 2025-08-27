@@ -63,8 +63,8 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        string token = await secureStorageService.GetAsync(Constants.TokenName);
-        await _syncService.SyncAsync(token, true);
+        string token = await secureStorageService.GetAsync(Constants.TokenName).ConfigureAwait(false);
+        await _syncService.SyncAsync(true);
         _cacheService.ClearCache();
         Preferences.Set(Constants.CurrentVideoIndexName, 0);
         await Application.Current.MainPage.DisplayAlert("Sync", "Sync completed successfully.", "OK");

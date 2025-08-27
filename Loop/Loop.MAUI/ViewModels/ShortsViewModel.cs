@@ -41,9 +41,9 @@ public partial class ShortsViewModel : ObservableObject
             // 2. Background sync with API
             _ = Task.Run(async () =>
             {
-                List<ShortsListDto> apiItems = await _syncService.SyncAsync(token);
+                List<ShortsListDto>? apiItems = await _syncService.SyncAsync();
 
-                if (apiItems.Any())
+                if (apiItems != null && apiItems.Any())
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {

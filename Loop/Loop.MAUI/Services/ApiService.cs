@@ -17,7 +17,8 @@ public class ApiService
         this.serviceProvider = serviceProvider;
         _http = new HttpClient(new HttpClientHandler
         {
-            AutomaticDecompression = System.Net.DecompressionMethods.All
+            AutomaticDecompression = System.Net.DecompressionMethods.All,
+            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
         })
         {
             Timeout = TimeSpan.FromSeconds(30)
